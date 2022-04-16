@@ -4,13 +4,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Zombies.GameObjects.Components;
+using Zombies.Enum;
 
 namespace Zombies.GameObjects.Entities
 {
     class Entity
     {
         //Property
-        uint _id;                                           //Entity's id
+        uint _id;                                             //Entity's id
+        EntityType _type;                               //Entity's type
         List<Component> _components = new List<Component>();  //Entity's components
 
         /// <summary>
@@ -24,12 +26,29 @@ namespace Zombies.GameObjects.Entities
         public List<Component> Components { get => _components; set => _components = value; }
 
         /// <summary>
+        /// Get entity type
+        /// </summary>
+        internal EntityType Type { get => _type; }
+
+        /// <summary>
         /// Constructor
         /// </summary>
         /// <param name="id"> Entity's id </param>
-        public Entity(uint id)
+        public Entity(uint id, EntityType type)
         {
             _id = id;
+            _type = type;
+        }
+
+        /// <summary>
+        /// Link all component to this entity
+        /// </summary>
+        public void LinkComponents()
+        {
+            foreach(Component component in _components)
+            {
+                component.Entity = this;
+            }
         }
 
         /// <summary>
@@ -41,7 +60,7 @@ namespace Zombies.GameObjects.Entities
         public bool GetComponentOfType(Type componentType, out Component component)
         {
             //Init component with placeholder
-            component = new AABB(this, 0, 0);
+            component = new AABB(0, 0);
 
             //Verify if searched type is a component 
             if (!componentType.IsSubclassOf(typeof(Component)))

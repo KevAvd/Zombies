@@ -15,15 +15,6 @@ namespace Zombies.GameObjects.Components
         /// <summary>
         /// Get component's entity
         /// </summary>
-        public Entity Entity { get => _entity; }
-
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        /// <param name="entity"> Component's entity </param>
-        public Component(Entity entity)
-        {
-            _entity = entity;
-        }
+        public Entity Entity { get => _entity; set => _entity = value; }
     }
 }

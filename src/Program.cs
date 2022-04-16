@@ -1,9 +1,13 @@
-﻿using SFML.System;
+﻿using System;
+using System.Collections.Generic;
+using System.Reflection;
+using SFML.System;
 using SFML.Graphics;
 using SFML.Window;
 using Zombies.Systems;
 using Zombies.GameObjects.Entities;
 using Zombies.GameObjects.Components;
+using Zombies.Enum;
 using Zombies;
 
 //Window's resolution
@@ -28,17 +32,50 @@ float updateAcc = 0;
 //Create window
 RenderWindow window = new RenderWindow(new VideoMode(xResolution, yResolution), "Zombies");
 
+//Init singleton InputHandler
+InputHandler.GetInstance().Window = window;
+
 //Create renderer
 RenderStates rndrState = new RenderStates(new Texture(@"C:\Users\drimi\OneDrive\Bureau\Asset\Player.png"));
 Renderer renderer = new Renderer(rndrState, window);
 
-//Create Game state
-Entity player = new Entity(0);
-player.Components.Add(new AABB(player, 100, 100));
-player.Components.Add(new GameSprite(player, 100, 100, new Vector2f(0, 0), new Vector2f(100, 0), new Vector2f(100, 100), new Vector2f(0, 100)));
-player.Components.Add(new Position(player, 100, 100));
+//Create an entity
+Entity player = new Entity(0, EntityType.Player);
+player.Components.Add(new AABB(100, 100));
+player.Components.Add(new GameSprite(100, 100, new Vector2f(0, 0), new Vector2f(100, 0), new Vector2f(100, 100), new Vector2f(0, 100)));
+player.Components.Add(new Position(100, 500));
+player.LinkComponents();
+
+//Create a game state
 GameState state = new GameState();
 state.Entities.Add(player);
+
+//Load all scripts
+//Get all types in the current executing assembly
+Type[] types = Assembly.GetExecutingAssembly().GetTypes();
+
+//Instantiate all sub class of Script
+foreach (Type t in types)
+{
+    if (t.IsSubclassOf(typeof(Script)))
+    {
+        //Create instance of script
+        Script script = (Script)Activator.CreateInstance(t);
+
+        //Add script to compatible entities
+        foreach(Entity entity in state.Entities)
+        {
+            if(entity.Type == script.GetEntityType())
+            {
+                entity.Components.Add(script);
+                entity.LinkComponents();
+            }
+        }
+    }
+}
+
+//Play script
+state.PlayScriptStart();
 
 //GameLoop
 while (window.IsOpen)
@@ -54,10 +91,14 @@ while (window.IsOpen)
     //Dispatch window's events
     window.DispatchEvents();
 
+    //Update key input
+    InputHandler.GetInstance().Update();
+
     //Update game
     if(updateAcc >= updateRate)
     {
         ups++;
+        state.PlayScriptOnUpdate(updateAcc);
         updateAcc = 0;
     }
 

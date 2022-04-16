@@ -32,10 +32,9 @@ namespace Zombies.GameObjects.Components
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="entity"> Component's entity </param>
         /// <param name="x"> X position </param>
         /// <param name="y"> Y position </param>
-        public Position(Entity entity, float x, float y) : base(entity)
+        public Position(float x, float y)
         {
             _x = x;
             _y = y;

@@ -80,7 +80,7 @@ namespace Zombies.Systems
             vertices[3].Position = position - half_width + half_height;
 
             //Get position
-            position = new Vector2f((comp as Position).X, (comp as Position).X);
+            position = new Vector2f((comp as Position).X, (comp as Position).Y);
 
             //Set vertices to World space
             for(int i = 0; i < vertices.Length; i++)
@@ -91,12 +91,6 @@ namespace Zombies.Systems
             }
 
             //Add vertices to list
-            //_vertices.Add(vertices[3]);
-            //_vertices.Add(vertices[0]);
-            //_vertices.Add(vertices[1]);
-            //_vertices.Add(vertices[3]);
-            //_vertices.Add(vertices[1]);
-            //_vertices.Add(vertices[2]);
             _vertices.AddRange(vertices);
         }
     }

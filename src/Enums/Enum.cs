@@ -6,5 +6,12 @@ using System.Threading.Tasks;
 
 namespace Zombies.Enum
 {
-
+    enum EntityType
+    {
+        Player,
+        Zombies,
+        Prop,
+        Interactible,
+        Collectible
+    }
 }

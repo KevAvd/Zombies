@@ -26,10 +26,9 @@ namespace Zombies.GameObjects.Components
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="entity"> Component's entity </param>
         /// <param name="w"> Box collider width </param>
         /// <param name="h"> Box collider height </param>
-        public AABB(Entity entity, float w, float h) : base(entity)
+        public AABB(float w, float h)
         {
             _width = w;
             _height = h;

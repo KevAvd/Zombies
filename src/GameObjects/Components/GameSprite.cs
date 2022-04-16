@@ -33,14 +33,13 @@ namespace Zombies.GameObjects.Components
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="entity"> Component's entity </param>
         /// <param name="w"> Sprite width </param>
         /// <param name="h"> Sprite height </param>
         /// <param name="txtCoords1"> Texture coordinates 1 </param>
         /// <param name="txtCoords2"> Texture coordinates 2 </param>
         /// <param name="txtCoords3"> Texture coordinates 3 </param>
         /// <param name="txtCoords4"> Texture coordinates 4 </param>
-        public GameSprite(Entity entity, float w, float h, Vector2f txtCoords1, Vector2f txtCoords2, Vector2f txtCoords3, Vector2f txtCoords4) : base(entity)
+        public GameSprite(float w, float h, Vector2f txtCoords1, Vector2f txtCoords2, Vector2f txtCoords3, Vector2f txtCoords4)
         {
             _width = w;
             _height = h;
