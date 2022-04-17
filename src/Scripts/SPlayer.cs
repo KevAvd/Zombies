@@ -14,49 +14,46 @@ namespace Zombies.Scripts
 {
     internal class SPlayer : Script
     {
-        InputHandler inptHdlr;
-        Position _pos;
-        float _speed;
+        float _speed = 500;
+
+        /// <summary>
+        /// Init component
+        /// </summary>
+        public SPlayer()
+        {
+            //Init component
+            _position = new Position();
+            _sprite = new GameSprite(100, 100, new Vector2f(0, 0), new Vector2f(100, 0), new Vector2f(100, 100), new Vector2f(0, 100));
+        }
 
         public override void Start()
         {
-            inptHdlr = InputHandler.GetInstance();
 
-            if (_entity.GetComponentOfType(typeof(Position), out Component comp))
-            {
-                _pos = (Position)comp;
-            }
-
-            _speed = 500;
         }
 
         public override void OnUpdate(float dt)
         {
-            if (inptHdlr.IsPressed(Keyboard.Key.W))
+            //Move player
+            if (Inputs.IsPressed(Keyboard.Key.W))
             {
-                _pos.Y -= _speed * dt;
+                _position.Y -= _speed * dt;
             }
-            if (inptHdlr.IsPressed(Keyboard.Key.A))
+            if (Inputs.IsPressed(Keyboard.Key.A))
             {
-                _pos.X -= _speed * dt;
+                _position.X -= _speed * dt;
             }
-            if (inptHdlr.IsPressed(Keyboard.Key.S))
+            if (Inputs.IsPressed(Keyboard.Key.S))
             {
-                _pos.Y += _speed * dt;
+                _position.Y += _speed * dt;
             }
-            if (inptHdlr.IsPressed(Keyboard.Key.D))
+            if (Inputs.IsPressed(Keyboard.Key.D))
             {
-                _pos.X += _speed * dt;
+                _position.X += _speed * dt;
             }
 
-            Vector2i mousePos = inptHdlr.GetMousePosition(true);
-            _pos.Heading = MathF.Atan2(mousePos.Y - _pos.Y, mousePos.X - _pos.X) - (99 * 180 / MathF.PI);
+            //Make player aim at mouse cursor
+            Vector2i mousePos = Inputs.GetMousePosition(true);
+            _position.Heading = MathF.Atan2(mousePos.Y - _position.Y, mousePos.X - _position.X) - (99 * 180 / MathF.PI);
         }
-
-        public override EntityType GetEntityType()
-        {
-            return EntityType.Player;
-        }
-
     }
 }

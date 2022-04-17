@@ -11,14 +11,14 @@ namespace Zombies.GameObjects.Entities
     class Entity
     {
         //Property
-        uint _id;                                             //Entity's id
-        EntityType _type;                               //Entity's type
+        int _id;                                              //Entity's id
+        EntityType _type;                                     //Entity's type
         List<Component> _components = new List<Component>();  //Entity's components
 
         /// <summary>
         /// Get ID
         /// </summary>
-        public uint ID { get => _id; }
+        public int ID { get => _id; }
 
         /// <summary>
         /// Get/Set components
@@ -26,18 +26,12 @@ namespace Zombies.GameObjects.Entities
         public List<Component> Components { get => _components; set => _components = value; }
 
         /// <summary>
-        /// Get entity type
-        /// </summary>
-        internal EntityType Type { get => _type; }
-
-        /// <summary>
         /// Constructor
         /// </summary>
         /// <param name="id"> Entity's id </param>
-        public Entity(uint id, EntityType type)
+        public Entity(int id)
         {
             _id = id;
-            _type = type;
         }
 
         /// <summary>

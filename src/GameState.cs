@@ -12,8 +12,31 @@ namespace Zombies
     {
         //Property
         List<Entity> _entities = new List<Entity>();     //All entities of current state
+        int _IDcount = 0;                                //Entity ID counter
 
         internal List<Entity> Entities { get => _entities; set => _entities = value; }
+
+        /// <summary>
+        /// Create a new entity
+        /// </summary>
+        /// <param name="comps"> Component of the entity </param>
+        public void CreateEntity(params Component[] comps)
+        {
+            //Add entity to list
+            _entities.Add(new Entity(_IDcount));
+
+            //Add components to entity
+            for (int i = 0; i < comps.Length; i++)
+            {
+                _entities[_IDcount].Components.Add(comps[i]);
+            }
+
+            //Link components to entity
+            _entities[_IDcount].LinkComponents();
+
+            //Increment id counter
+            _IDcount++;
+        }
 
         /// <summary>
         /// Return all component of choosen type in current game state entities list
@@ -104,7 +127,7 @@ namespace Zombies
         /// <summary>
         /// Play all "Start" script in current entity list
         /// </summary>
-        public void PlayScriptStart()
+        public void PlayStartScript()
         {
             if(!GetAllComponentOfSubType(typeof(Script), out Component[] components))
             {
@@ -121,7 +144,7 @@ namespace Zombies
         /// Play all "OnUpdate" script in current entity list
         /// </summary>
         /// <param name="dt"> Delta time </param>
-        public void PlayScriptOnUpdate(float dt)
+        public void PlayOnUpdateScript(float dt)
         {
             if (!GetAllComponentOfSubType(typeof(Script), out Component[] components))
             {

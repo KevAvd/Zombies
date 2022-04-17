@@ -28,16 +28,5 @@ namespace Zombies.GameObjects.Components
         /// Get/Set heading angle (radian)
         /// </summary>
         public float Heading { get => _heading; set => _heading = value; }
-
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        /// <param name="x"> X position </param>
-        /// <param name="y"> Y position </param>
-        public Position(float x, float y)
-        {
-            _x = x;
-            _y = y;
-        }
     }
 }

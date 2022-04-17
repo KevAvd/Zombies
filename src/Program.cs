@@ -33,49 +33,27 @@ float updateAcc = 0;
 RenderWindow window = new RenderWindow(new VideoMode(xResolution, yResolution), "Zombies");
 
 //Init singleton InputHandler
-InputHandler.GetInstance().Window = window;
+Inputs.Window = window;
 
 //Create renderer
 RenderStates rndrState = new RenderStates(new Texture(@"C:\Users\drimi\OneDrive\Bureau\Asset\Player.png"));
 Renderer renderer = new Renderer(rndrState, window);
 
-//Create an entity
-Entity player = new Entity(0, EntityType.Player);
-player.Components.Add(new AABB(100, 100));
-player.Components.Add(new GameSprite(100, 100, new Vector2f(0, 0), new Vector2f(100, 0), new Vector2f(100, 100), new Vector2f(0, 100)));
-player.Components.Add(new Position(100, 500));
-player.LinkComponents();
-
-//Create a game state
+//Create game state
 GameState state = new GameState();
-state.Entities.Add(player);
 
-//Load all scripts
-//Get all types in the current executing assembly
+//Load Scripts
 Type[] types = Assembly.GetExecutingAssembly().GetTypes();
-
-//Instantiate all sub class of Script
 foreach (Type t in types)
 {
     if (t.IsSubclassOf(typeof(Script)))
     {
-        //Create instance of script
-        Script script = (Script)Activator.CreateInstance(t);
-
-        //Add script to compatible entities
-        foreach(Entity entity in state.Entities)
-        {
-            if(entity.Type == script.GetEntityType())
-            {
-                entity.Components.Add(script);
-                entity.LinkComponents();
-            }
-        }
+        state.CreateEntity((Activator.CreateInstance(t) as Script).GetUsedComponents());
     }
 }
 
-//Play script
-state.PlayScriptStart();
+//Play start script
+state.PlayStartScript();
 
 //GameLoop
 while (window.IsOpen)
@@ -92,13 +70,13 @@ while (window.IsOpen)
     window.DispatchEvents();
 
     //Update key input
-    InputHandler.GetInstance().Update();
+    Inputs.Update();
 
     //Update game
     if(updateAcc >= updateRate)
     {
+        state.PlayOnUpdateScript(updateAcc);
         ups++;
-        state.PlayScriptOnUpdate(updateAcc);
         updateAcc = 0;
     }
 
