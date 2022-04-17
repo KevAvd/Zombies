@@ -14,13 +14,16 @@ namespace Zombies
         List<Entity> _entities = new List<Entity>();     //All entities of current state
         int _IDcount = 0;                                //Entity ID counter
 
+        /// <summary>
+        /// All entities in this game state
+        /// </summary>
         internal List<Entity> Entities { get => _entities; set => _entities = value; }
 
         /// <summary>
         /// Create a new entity
         /// </summary>
         /// <param name="comps"> Component of the entity </param>
-        public void CreateEntity(params Component[] comps)
+        public void CreateEntity(Component[] comps, string name)
         {
             //Add entity to list
             _entities.Add(new Entity(_IDcount));
@@ -34,8 +37,63 @@ namespace Zombies
             //Link components to entity
             _entities[_IDcount].LinkComponents();
 
+            //Add entity name if not null
+            if(name != null && name != "")
+            {
+                _entities[_IDcount].Name = name;
+            }
+
             //Increment id counter
             _IDcount++;
+        }
+
+        /// <summary>
+        /// Get entity from id
+        /// </summary>
+        /// <param name="id"> Entity's id </param>
+        /// <param name="entity"> Founded entity </param>
+        /// <returns> True if an entity is founded </returns>
+        public bool GetEntity(int id, out Entity entity)
+        {
+            foreach(Entity ent in _entities)
+            {
+                if(ent.ID == id)
+                {
+                    entity = ent; 
+                    return true;
+                }
+            }
+
+            entity = new Entity(id);
+            return false;
+        }
+
+        /// <summary>
+        /// Get all entities with same name
+        /// </summary>
+        /// <param name="name"> Name to search </param>
+        /// <param name="entities"> Array of entity with searched name </param>
+        /// <returns> True if at least one entity is founded </returns>
+        public bool GetEntity(string name, out Entity[] entities)
+        {
+            List<Entity> ents = new List<Entity>();
+
+            foreach(Entity ent in _entities)
+            {
+                if(ent.Name == name)
+                {
+                    ents.Add(ent);
+                }
+            }
+
+            if(ents.Count > 0)
+            {
+                entities = ents.ToArray();
+                return true;
+            }
+
+            entities = new Entity[0];
+            return false;
         }
 
         /// <summary>
@@ -122,6 +180,22 @@ namespace Zombies
 
             //If no components has been foun return false
             return false;
+        }
+
+        /// <summary>
+        /// Set the game state variable to all scripts
+        /// </summary>
+        public void SetScriptGameState()
+        {
+            if (!GetAllComponentOfSubType(typeof(Script), out Component[] components))
+            {
+                return;
+            }
+
+            foreach (Script script in components)
+            {
+                script.State = this;
+            }
         }
 
         /// <summary>

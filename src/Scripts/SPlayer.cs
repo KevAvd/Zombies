@@ -22,8 +22,9 @@ namespace Zombies.Scripts
         public SPlayer()
         {
             //Init component
-            _position = new Position();
-            _sprite = new GameSprite(100, 100, new Vector2f(0, 0), new Vector2f(100, 0), new Vector2f(100, 100), new Vector2f(0, 100));
+            COMP_Position = new Position();
+            COMP_Sprite = new GameSprite(100, 100, new Vector2f(0, 0), new Vector2f(100, 0), new Vector2f(100, 100), new Vector2f(0, 100));
+            ENTITY_Name = "Player";
         }
 
         public override void Start()
@@ -36,24 +37,24 @@ namespace Zombies.Scripts
             //Move player
             if (Inputs.IsPressed(Keyboard.Key.W))
             {
-                _position.Y -= _speed * dt;
+                COMP_Position.Y -= _speed * dt;
             }
             if (Inputs.IsPressed(Keyboard.Key.A))
             {
-                _position.X -= _speed * dt;
+                COMP_Position.X -= _speed * dt;
             }
             if (Inputs.IsPressed(Keyboard.Key.S))
             {
-                _position.Y += _speed * dt;
+                COMP_Position.Y += _speed * dt;
             }
             if (Inputs.IsPressed(Keyboard.Key.D))
             {
-                _position.X += _speed * dt;
+                COMP_Position.X += _speed * dt;
             }
 
             //Make player aim at mouse cursor
             Vector2i mousePos = Inputs.GetMousePosition(true);
-            _position.Heading = MathF.Atan2(mousePos.Y - _position.Y, mousePos.X - _position.X) - (99 * 180 / MathF.PI);
+            COMP_Position.Heading = MathF.Atan2(mousePos.Y - COMP_Position.Y, mousePos.X - COMP_Position.X) - (99 * 180 / MathF.PI);
         }
     }
 }

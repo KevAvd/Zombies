@@ -48,9 +48,12 @@ foreach (Type t in types)
 {
     if (t.IsSubclassOf(typeof(Script)))
     {
-        state.CreateEntity((Activator.CreateInstance(t) as Script).GetUsedComponents());
+        state.CreateEntity((Activator.CreateInstance(t) as Script).GetUsedComponents(out string name), name);
     }
 }
+
+//Set game state in each script
+state.SetScriptGameState();
 
 //Play start script
 state.PlayStartScript();

@@ -11,32 +11,46 @@ namespace Zombies.GameObjects.Components
     abstract class Script : Component
     {
         //Components
-        protected AABB _aabb;
-        protected GameSprite _sprite;
-        protected Position _position;
+        protected AABB COMP_AABB;
+        protected GameSprite COMP_Sprite;
+        protected Position COMP_Position;
+
+        //Entity's property
+        protected string ENTITY_Name;
+
+        //Game state
+        protected GameState GAME_State;
+
+        /// <summary>
+        /// Get/Set game state
+        /// </summary>
+        public GameState State { get => GAME_State; set => GAME_State = value; }
 
         /// <summary>
         /// Return all components used in script
         /// </summary>
         /// <returns> Components used in script </returns>
-        public Component[] GetUsedComponents()
+        public Component[] GetUsedComponents(out string name)
         {
             //List of used components
             List<Component> usedComponents = new List<Component>();
 
             //Add non null components to the list
-            if (_aabb != null)
+            if (COMP_AABB != null)
             {
-                usedComponents.Add(_aabb);
+                usedComponents.Add(COMP_AABB);
             }
-            if (_sprite != null)
+            if (COMP_Sprite != null)
             {
-                usedComponents.Add(_sprite);
+                usedComponents.Add(COMP_Sprite);
             }
-            if (_position != null)
+            if (COMP_Position != null)
             {
-                usedComponents.Add(_position);
+                usedComponents.Add(COMP_Position);
             }
+
+            //Set name
+            name = ENTITY_Name;
 
             //Add script
             usedComponents.Add(this);
@@ -46,14 +60,14 @@ namespace Zombies.GameObjects.Components
         }
 
         /// <summary>
-        /// This method is called at the start of the game
-        /// </summary>
-        public abstract void Start();
-
-        /// <summary>
         /// This method is called every update
         /// </summary>
         /// <param name="dt"> Delta time </param>
         public abstract void OnUpdate(float dt);
+
+        /// <summary>
+        /// This method is called at the start of the game
+        /// </summary>
+        public abstract void Start();
     }
 }
