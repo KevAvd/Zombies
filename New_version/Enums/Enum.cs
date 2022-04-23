@@ -4,10 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ZombiesGame.Systems
+namespace ZombiesGame.Enums
 {
-    static class Physics
+    enum CollisionType
     {
-
+        AABB_AABB,
+        AABB_LINE,
+        AABB_CIRCLE,
+        CIRCLE_CIRCLE
     }
 }

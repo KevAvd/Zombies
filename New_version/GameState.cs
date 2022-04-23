@@ -13,6 +13,5 @@ namespace ZombiesGame
     {
         //GameObjects
         List<GameObject> _gameObj = new List<GameObject>();
-        Player _player;
     }
 }

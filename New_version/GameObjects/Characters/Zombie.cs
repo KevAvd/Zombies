@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using SFML.System;
 using SFML.Graphics;
-using ZombiesGame.Components;
+using ZombiesGame.PhysicObjects;
 using ZombiesGame.Mathematics;
 using ZombiesGame.Systems;
 
@@ -13,7 +13,6 @@ namespace ZombiesGame.GameObjects.Characters
 {
     internal class Zombie : Character
     {
-        float _speed;
         Player _player;
 
         public Zombie(Player player, float x, float y)
@@ -24,7 +23,7 @@ namespace ZombiesGame.GameObjects.Characters
             _speed = 200;
 
             //Set AABB
-            _aabb = new AABB(100, 100);
+            _aabb = new AABB(new Vector2f(0, 0), 100, 100, this);
 
             //Set vertices
             _vertices = new Vertex[4];
@@ -58,14 +57,15 @@ namespace ZombiesGame.GameObjects.Characters
 
         public override void Update()
         {
-            FollowPlayer(GameTime.UpdateDeltaTime);
+            FollowPlayer(GameTime.DeltaTimeU);
+
+            //Call base method
+            base.Update();
         }
 
         protected void FollowPlayer(float dt)
         {
-            Vector2f vecToPlayer = LinearAlgebra.NormalizeVector(new Vector2f(_player.Transformable.Position.X - _transformable.Position.X, _player.Transformable.Position.Y - _transformable.Position.Y));
-
-            _transformable.Position += vecToPlayer * _speed * dt;
+            _velocity = LinearAlgebra.NormalizeVector(new Vector2f(_player.Transformable.Position.X - _transformable.Position.X, _player.Transformable.Position.Y - _transformable.Position.Y));
 
             //Make zombie aim at player
             Vector2f playerVec = new Vector2f(_player.Transformable.Position.X, _player.Transformable.Position.Y);

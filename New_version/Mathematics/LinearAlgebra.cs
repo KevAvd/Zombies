@@ -9,6 +9,11 @@ namespace ZombiesGame.Mathematics
 {
     static class LinearAlgebra
     {
+        public static float GetVectorLength(Vector2f vec)
+        {
+            return (float)Math.Sqrt(vec.X * vec.X + vec.Y * vec.Y);
+        }
+
         public static Vector2f VectorRotation(Vector2f vec, float angle)
         {
             return new Vector2f(vec.X * MathF.Cos(angle) - vec.Y * MathF.Sin(angle), vec.X * MathF.Sin(angle) + vec.Y * MathF.Cos(angle));
@@ -16,6 +21,11 @@ namespace ZombiesGame.Mathematics
 
         public static Vector2f NormalizeVector(Vector2f vec)
         {
+            if(vec.X == 0 && vec.Y == 0)
+            {
+                return vec;
+            }
+
             float d = MathF.Sqrt(vec.X * vec.X + vec.Y * vec.Y);
             return new Vector2f(vec.X / d, vec.Y / d);
         }

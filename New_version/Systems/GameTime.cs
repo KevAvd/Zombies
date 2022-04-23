@@ -29,12 +29,12 @@ namespace ZombiesGame.Systems
         /// <summary>
         /// Get frame delta time
         /// </summary>
-        public static float FrameDeltaTime { get => _frameAcc; }
+        public static float DeltaTimeF { get => _frameAcc; }
 
         /// <summary>
         /// Get update delta time
         /// </summary>
-        public static float UpdateDeltaTime { get => _updateAcc; }
+        public static float DeltaTimeU { get => _updateAcc; }
 
         /// <summary>
         /// Get frame rate
@@ -105,7 +105,7 @@ namespace ZombiesGame.Systems
                 return;
             }
 
-            _frameAcc = 1f / rate;
+            _frameRate = 1f / rate;
         }
 
         /// <summary>

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using SFML.System;
 using SFML.Graphics;
 using SFML.Window;
-using ZombiesGame.Components;
+using ZombiesGame.PhysicObjects;
 using ZombiesGame.Mathematics;
 using ZombiesGame.Systems;
 
@@ -14,16 +14,13 @@ namespace ZombiesGame.GameObjects.Characters
 {
     internal class Player : Character
     {
-        Vector2f _movement;
-        float _speed;
-
         public Player()
         {
             //Set speed
             _speed = 500;
 
             //Set AABB
-            _aabb = new AABB(100, 100);
+            _aabb = new AABB(new Vector2f(500, 500), 100, 100, this);
 
             //Set vertices
             _vertices = new Vertex[4];
@@ -58,31 +55,30 @@ namespace ZombiesGame.GameObjects.Characters
         public override void Update()
         {
             //Move player
-            _movement = new Vector2f(0, 0);
+            _velocity = new Vector2f(0, 0);
             if (Inputs.IsPressed(Keyboard.Key.W))
             {
-                _movement.Y -= 1;
+                _velocity.Y -= 1;
             }
             if (Inputs.IsPressed(Keyboard.Key.A))
             {
-                _movement.X -= 1;
+                _velocity.X -= 1;
             }
             if (Inputs.IsPressed(Keyboard.Key.S))
             {
-                _movement.Y += 1;
+                _velocity.Y += 1;
             }
             if (Inputs.IsPressed(Keyboard.Key.D))
             {
-                _movement.X += 1;
-            }
-            if(_movement.X != 0 || _movement.Y != 0)
-            {
-                _transformable.Position += LinearAlgebra.NormalizeVector(_movement) * _speed * GameTime.UpdateDeltaTime;
+                _velocity.X += 1;
             }
 
             //Make player aim at mouse cursor
-            Vector2i mousePos = Inputs.GetMousePosition(true);
+            Vector2f mousePos = Inputs.GetMousePosition(true);
             _transformable.Rotation = MathF.Atan2(mousePos.Y - _transformable.Position.Y, mousePos.X - _transformable.Position.X) - (99 * 180 / MathF.PI);
+
+            //Call base method
+            base.Update();
         }
     }
 }

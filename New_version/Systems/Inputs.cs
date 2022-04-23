@@ -155,15 +155,15 @@ namespace ZombiesGame.Systems
         /// </summary>
         /// <param name="relative"> Determine if the returned position is relative to the window </param>
         /// <returns> Mouse position </returns>
-        public static Vector2i GetMousePosition(bool relative)
-        {
+        public static Vector2f GetMousePosition(bool relative)
+        {   
             if (relative)
             {
-                return Mouse.GetPosition(_window);
+                return (Vector2f)Mouse.GetPosition(_window);
             }
             else
             {
-                return Mouse.GetPosition();
+                return (Vector2f)Mouse.GetPosition();
             }
         }
     }
