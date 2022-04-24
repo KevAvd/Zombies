@@ -12,17 +12,11 @@ namespace ZombiesGame.PhysicObjects
     abstract class PhysicObject
     {
         protected Vertex[] _vertices;                                                 //Physic object's vertices
-        protected GameObject _obj;                                                    //GameObject related to this AABB
 
         /// <summary>
         /// Get vertices
         /// </summary>
         public Vertex[] Vertices { get => _vertices; }
-
-        /// <summary>
-        /// Get game object
-        /// </summary>
-        public GameObject GameObject { get => _obj; }
 
         /// <summary>
         /// Get all points that represent the physic object

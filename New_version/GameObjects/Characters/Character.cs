@@ -6,15 +6,18 @@ using System.Threading.Tasks;
 using SFML.System;
 using SFML.Graphics;
 using ZombiesGame.Systems;
+using ZombiesGame.Enums;
 
 namespace ZombiesGame.GameObjects.Characters
 {
     class Character : GameObject
     {
         //Character's property
-        protected float _health;              //Health
-        protected float _speed;               //Speed
-        protected Vector2f _velocity;         //Velocity
+        protected float _health;                          //Health
+        protected float _speed;                           //Speed
+        protected Vector2f _velocity;                     //Velocity
+        protected Vector2f _movement;                     //Velocity
+        protected ObjectState _state = ObjectState.ALIVE; //Object state
 
         /// <summary>
         /// Get/Set health
@@ -22,22 +25,23 @@ namespace ZombiesGame.GameObjects.Characters
         public float Health { get => _health; set => _health = value; }
 
         /// <summary>
+        /// Get/Set speed
+        /// </summary>
+        public float Speed { get => _speed; set => _speed = value; }
+
+        /// <summary>
         /// Get/Set velocity
         /// </summary>
         public Vector2f Velocity { get => _velocity; set => _velocity = value; }
 
-        public override void Start()
-        {
+        /// <summary>
+        /// Get/Set Movement
+        /// </summary>
+        public Vector2f Movement { get => _movement; set => _movement = value; }
 
-        }
-
-        public override void Update()
-        {
-            if(_velocity.X != 0 || _velocity.Y != 0)
-            {
-                _transformable.Position += _velocity * _speed * GameTime.DeltaTimeU;
-                _aabb.UpdatePosition(_transformable.Position);
-            }
-        }
+        /// <summary>
+        /// Get state
+        /// </summary>
+        public ObjectState State { get => _state; set => _state = value; }
     }
 }

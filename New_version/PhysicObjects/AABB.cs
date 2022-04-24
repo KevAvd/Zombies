@@ -32,12 +32,11 @@ namespace ZombiesGame.PhysicObjects
         /// <param name="w"> AABB's width </param>
         /// <param name="h"> AABB's height </param>
         /// <param name="obj"> GameObject related to this AABB </param>
-        public AABB(Vector2f pos, float w, float h, GameObject obj)
+        public AABB(Vector2f pos, float w, float h)
         {
             _vertices = new Vertex[4];
             _width = w;
             _height = h;
-            _obj = obj;
 
             UpdatePosition(pos);
         }

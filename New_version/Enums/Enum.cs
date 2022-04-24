@@ -6,11 +6,22 @@ using System.Threading.Tasks;
 
 namespace ZombiesGame.Enums
 {
-    enum CollisionType
+    enum AmmoType
     {
-        AABB_AABB,
-        AABB_LINE,
-        AABB_CIRCLE,
-        CIRCLE_CIRCLE
+        PISTOL,
+        RIFLE,
+        SHOTGUN
+    }
+
+    enum ObjectState
+    {
+        ALIVE,
+        DEAD
+    }
+
+    enum ItemState
+    {
+        INVENTORY,
+        ONGROUND
     }
 }

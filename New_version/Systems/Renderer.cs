@@ -57,7 +57,7 @@ namespace ZombiesGame.Systems
             foreach (GameObject obj in gameObjects)
             {
                 ObjectSpaceToWorldSpace(obj.Vertices, obj.Transformable);
-                if (RENDER_AABB) { DrawAABB(obj.AABB, _Color_AABB); }
+                if (RENDER_AABB && obj.PhysicObject.GetType() == typeof(AABB)) { DrawAABB((AABB)obj.PhysicObject, _Color_AABB); }
             }
 
             //Clear last image

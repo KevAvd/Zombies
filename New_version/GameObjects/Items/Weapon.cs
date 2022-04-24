@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using ZombiesGame.PhysicObjects;
 
 namespace ZombiesGame.GameObjects.Items
 {
@@ -10,6 +11,7 @@ namespace ZombiesGame.GameObjects.Items
     {
         protected float _damage;
         protected float _cooldown;
+        protected float _range;
 
         /// <summary>
         /// Get damage
@@ -22,16 +24,8 @@ namespace ZombiesGame.GameObjects.Items
         public float Cooldown { get => _cooldown; }
 
         /// <summary>
-        /// Constructor
+        /// Get range
         /// </summary>
-        /// <param name="damage"> Weapon's damage </param>
-        /// <param name="cooldown"> Weapon's cooldown in seconds </param>
-        public Weapon(float damage, float cooldown)
-        {
-            _damage = damage;
-            _cooldown = cooldown;
-        }
-
-        public abstract void Attack();
+        public float Range { get => _range; }
     }
 }
