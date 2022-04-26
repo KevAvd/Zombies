@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using ZombiesGame.PhysicObjects;
+using ZombiesGame.GraphicObjects;
 using SFML.System;
 using SFML.Graphics;
 
@@ -13,7 +14,7 @@ namespace ZombiesGame.GameObjects
     {
         //Object's Property
         protected PhysicObject _physicObject;                             //Physic object
-        protected Vertex[] _vertices;                                     //Vertices
+        protected GraphicObject _graphicObject;                           //Vertices
         protected Transformable _transformable = new Transformable();     //Transformable
 
         /// <summary>
@@ -24,7 +25,7 @@ namespace ZombiesGame.GameObjects
         /// <summary>
         /// Get vertices
         /// </summary>
-        public Vertex[] Vertices { get => _vertices;}
+        public GraphicObject GraphicObject { get => _graphicObject;}
 
         /// <summary>
         /// Get/Set transformable

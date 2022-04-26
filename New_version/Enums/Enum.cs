@@ -24,4 +24,12 @@ namespace ZombiesGame.Enums
         INVENTORY,
         ONGROUND
     }
+
+    enum AnimationType
+    {
+        STATIC,
+        NORMAL,
+        REVERSE,
+        LOOP
+    }
 }

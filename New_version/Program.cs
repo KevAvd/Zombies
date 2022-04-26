@@ -26,7 +26,7 @@ int ups = 0;
 RenderWindow window = new RenderWindow(new VideoMode(xResolution, yResolution), "Zombies");
 
 //Init systems
-Renderer.State = new RenderStates(new Texture(@"C:\Users\drimi\OneDrive\Bureau\Asset\Player.png"));
+Renderer.State = new RenderStates(new Texture(@"C:\Users\drimi\OneDrive\Bureau\Asset\test.png"));
 Renderer.Target = window;
 Inputs.Window = window;
 GameTime.SetFrameRate(144);
@@ -101,6 +101,9 @@ void OnUpdate()
     
     foreach(GameObject obj in gameObjects)
     {
+        //Updates animations
+        obj.GraphicObject.GetAnimation().Update();
+
         //Update game objects
         if (obj.GetType() == typeof(Zombie))
         {
@@ -188,7 +191,7 @@ void HandlePlayer(Player p)
 
     //Make player aim at mouse cursor
     Vector2f mousePos = Inputs.GetMousePosition(true);
-    p.Rotation = MathF.Atan2(mousePos.Y - p.Position.Y, mousePos.X - p.Position.X) - (99 * 180 / MathF.PI);
+    p.Rotation = MathF.Atan2(mousePos.Y - p.Position.Y, mousePos.X - p.Position.X) + (99 * 180 / MathF.PI);
 
     //Handles weapon attack
     if (Inputs.IsClicked(Mouse.Button.Left))
@@ -219,6 +222,6 @@ void HandleZombie(Zombie z, Player p)
 
     //Make zombie aim at player
     Vector2f playerVec = new Vector2f(p.Position.X, p.Position.Y);
-    z.Rotation = MathF.Atan2(playerVec.Y - z.Position.Y, playerVec.X - z.Position.X) - (99 * 180 / MathF.PI);
+    z.Rotation = MathF.Atan2(playerVec.Y - z.Position.Y, playerVec.X - z.Position.X) + (99 * 180 / MathF.PI);
 
 }

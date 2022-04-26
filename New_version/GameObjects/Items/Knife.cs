@@ -20,7 +20,6 @@ namespace ZombiesGame.GameObjects.Items
 
             //Object property
             _physicObject = new AABB(new Vector2f(0, 0), 100, 50);
-            _vertices = new Vertex[4];
         }
     }
 }

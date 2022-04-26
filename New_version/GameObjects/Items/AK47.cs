@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using ZombiesGame.Enums;
 using ZombiesGame.PhysicObjects;
+using ZombiesGame.GraphicObjects;
 using SFML.System;
 using SFML.Graphics;
 
@@ -24,8 +25,6 @@ namespace ZombiesGame.GameObjects.Items
 
             //Object property
             _physicObject = new AABB(new Vector2f(0, 0), 100, 50);
-            _vertices = new Vertex[4];
-            
         }
     }
 }

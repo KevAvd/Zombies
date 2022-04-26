@@ -56,7 +56,7 @@ namespace ZombiesGame.Systems
             //Set vertices position to world space
             foreach (GameObject obj in gameObjects)
             {
-                ObjectSpaceToWorldSpace(obj.Vertices, obj.Transformable);
+                ObjectSpaceToWorldSpace(obj.GraphicObject.GetAnimation().GetFrame(), obj.Transformable);
                 if (RENDER_AABB && obj.PhysicObject.GetType() == typeof(AABB)) { DrawAABB((AABB)obj.PhysicObject, _Color_AABB); }
             }
 
@@ -107,7 +107,8 @@ namespace ZombiesGame.Systems
             //Set vertices to World space
             for (int i = 0; i < vertices.Length; i++)
             {
-                vertices2[i].Position = LinearAlgebra.VectorRotation(vertices[i].Position, transformable.Rotation) + transformable.Position;
+                vertices2[i].Position = LinearAlgebra.ScaleVector(vertices[i].Position, transformable.Scale);
+                vertices2[i].Position = LinearAlgebra.VectorRotation(vertices2[i].Position, transformable.Rotation) + transformable.Position;
                 vertices2[i].TexCoords = vertices[i].TexCoords;
                 vertices2[i].Color = vertices[i].Color;
             }
