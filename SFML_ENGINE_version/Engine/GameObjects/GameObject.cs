@@ -16,8 +16,10 @@ namespace SFML_Engine.GameObjects
         protected PhysicObject _physicObject;                             //Physic object
         protected GraphicObject _graphicObject;                           //Vertices
         protected Transformable _transformable = new Transformable();     //Transformable
+        protected GameObject _relative;                                   //Relative game object
         GameState _state;                                                 //Game state container
         bool _destroyed = false;                                          //Indicates if an object is destroyed
+        bool _IsRelative = false;                                         //Indicates if an object transfromable is relative to another one
 
         /// <summary>
         /// Get/Set physic object
@@ -33,6 +35,11 @@ namespace SFML_Engine.GameObjects
         /// Get/Set transformable
         /// </summary>
         public Transformable Transformable { get => _transformable; set => _transformable = value; }
+
+        /// <summary>
+        /// Get/Set relative object
+        /// </summary>
+        public GameObject Relative { get => _relative; set { _relative = value; _IsRelative = true; } }
 
         /// <summary>
         /// Get/Set position
@@ -89,6 +96,23 @@ namespace SFML_Engine.GameObjects
         public bool IsDestroyed()
         {
             return _destroyed;
+        }
+
+        /// <summary>
+        /// This object transformable will no longer be relative to another object transformable
+        /// </summary>
+        public void RemoveRelative()
+        {
+            _IsRelative = false;
+        }
+
+        /// <summary>
+        /// Indicate if this object is destroyed
+        /// </summary>
+        /// <returns></returns>
+        public bool IsRelative()
+        {
+            return _IsRelative;
         }
 
         /// <summary>

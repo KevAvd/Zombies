@@ -1,6 +1,7 @@
 ﻿using SFML.System;
 using SFML.Window;
 using SFML.Audio;
+using SFML_Engine.GameObjects;
 using SFML_Engine.GameObjects.GraphicObjects;
 using SFML_Engine.GameObjects.PhysicObjects;
 using SFML_Engine.Systems;
@@ -11,8 +12,14 @@ namespace ZombiesGame
     class Player : Character
     {
         float _timeAcc = 0;
-        float _weaponCooldown = 0.3f;
+        float _rifleCooldown = 0.100f;
+        float _pistolCooldown = 0.3f;
         Sound _gunShot = new Sound(new SoundBuffer(@"C:\Users\drimi\OneDrive\Bureau\Asset\Sounds\GunShot.wav"));
+        bool _rifle = false;
+
+        //Sprites
+        GameSprite _Sprite_Pistol;
+        GameSprite _Sprite_Rifle;
 
         /// <summary>
         /// Constructor
@@ -26,21 +33,12 @@ namespace ZombiesGame
             //Set AABB
             _physicObject = new AABB(new Vector2f(500, 500), 100, 100);
 
+            //Set sprites
+            _Sprite_Pistol = new GameSprite(0, 16, 16, 16);
+            _Sprite_Rifle = new GameSprite(16, 16, 16, 16);
+
             //Set graphic object
-            Animation animation = new Animation();
-            animation.AddFrame(
-                new Vector2f(0, 32),
-                new Vector2f(16, 32),
-                new Vector2f(16, 48),
-                new Vector2f(0, 48)
-            );
-            animation.AddFrame(
-                new Vector2f(0, 16),
-                new Vector2f(16, 16),
-                new Vector2f(16, 32),
-                new Vector2f(0, 32)
-            );
-            _graphicObject = new GraphicObject("Switching", animation);
+            _graphicObject = _Sprite_Pistol;
 
             //Set transformable
             _transformable.Position = new Vector2f(500, 500);
@@ -79,12 +77,32 @@ namespace ZombiesGame
             }
             if (Inputs.IsClicked(Keyboard.Key.Q))
             {
-                _graphicObject.GetAnimation().NextFrame();
+                if (_rifle)
+                {
+                    _graphicObject = _Sprite_Pistol;
+                    _rifle = false;
+                }
+                else
+                {
+                    _graphicObject = _Sprite_Rifle;
+                    _rifle = true;
+                }
             }
-            if (Inputs.IsClicked(Mouse.Button.Left) && _timeAcc >= _weaponCooldown)
+            if (_rifle)
             {
-                _timeAcc = 0;
-                Shoot();
+                if (Inputs.IsPressed(Mouse.Button.Left) && _timeAcc >= _rifleCooldown)
+                {
+                    _timeAcc = 0;
+                    Shoot();
+                }
+            }
+            else
+            {
+                if (Inputs.IsClicked(Mouse.Button.Left) && _timeAcc >= _pistolCooldown)
+                {
+                    _timeAcc = 0;
+                    Shoot();
+                }
             }
 
             //Make player aim at mouse cursor
@@ -97,20 +115,34 @@ namespace ZombiesGame
 
         void Shoot()
         {
+            //Play gun shot sound
             _gunShot.Play();
+
+            //Add muzzle flash
+            if (_rifle) { GetGameState().AddGameObj(new MuzzleFlash(this,100, -25)); }
+            else { GetGameState().AddGameObj(new MuzzleFlash(this, 100, 0)); }
+
+            //Detect shot collision
             Ray shot = new Ray(Position, Inputs.GetMousePosition(true) - Position, 4000);
             List<Vector2f> veclist = new List<Vector2f>();
-            foreach(Character z in GetGameState().Objects)
+            foreach(GameObject obj in GetGameState().Objects)
             {
-                if(z.GetType() != typeof(Zombie))
+                if(obj.GetType() != typeof(Zombie))
                 {
                     continue;
                 }
 
-                if(CollisionDetection.AABB_RAY(z.PhysicObject as AABB, shot, out Vector2f pNear, out Vector2f pFar, out Vector2f normal))
+                if(CollisionDetection.AABB_RAY(obj.PhysicObject as AABB, shot, out Vector2f pNear, out Vector2f pFar, out Vector2f normal))
                 {
-                    z.Velocity = LinearAlgebra.NormalizeVector(pNear - Position) * 500;
-                    z.Health -= 20;
+                    (obj as Zombie).Velocity = LinearAlgebra.NormalizeVector(pNear - Position) * 500;
+                    if (_rifle)
+                    {
+                        (obj as Zombie).Health -= 25;
+                    }
+                    else
+                    {
+                        (obj as Zombie).Health -= 20;
+                    }
                 }
             }
         }

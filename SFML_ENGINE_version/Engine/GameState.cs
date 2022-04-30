@@ -56,7 +56,7 @@ namespace SFML_Engine
         /// Add a game object
         /// </summary>
         /// <param name="obj"></param>
-        protected void AddGameObj(GameObject obj)
+        public void AddGameObj(GameObject obj)
         {
             obj.SetGameState(this);
             _gameObjects.Add(obj);

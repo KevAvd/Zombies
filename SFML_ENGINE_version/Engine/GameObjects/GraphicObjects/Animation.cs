@@ -10,7 +10,7 @@ using SFML_Engine.Enums;
 
 namespace SFML_Engine.GameObjects.GraphicObjects
 {
-    internal class Animation
+    internal class Animation : GraphicObject
     {
         //Property
         List<Vertex> _vertices = new List<Vertex>();        //All vertices (4 by frame)
@@ -41,33 +41,25 @@ namespace SFML_Engine.GameObjects.GraphicObjects
         }
 
         /// <summary>
-        /// Constructor
-        /// </summary>
-        public Animation()
-        {
-            _type = AnimationType.STATIC;
-        }
-
-        /// <summary>
         /// Add frame
         /// </summary>
         /// <param name="texCoord1"> Texture coordinates Top-Left </param>
         /// <param name="texCoord2"> Texture coordinates Top-Right </param>
         /// <param name="texCoord3"> Texture coordinates Bottom-Right </param>
         /// <param name="texCoord4"> Texture coordinates Bottom-Left </param>
-        public void AddFrame(Vector2f texCoord1, Vector2f texCoord2, Vector2f texCoord3, Vector2f texCoord4)
+        public override void AddFrame(float x, float y, float w, float h)
         {
-            _vertices.Add(new Vertex(new Vector2f(-1, -1), new Color(255, 255, 255, 255), texCoord1));
-            _vertices.Add(new Vertex(new Vector2f( 1, -1), new Color(255, 255, 255, 255), texCoord2));
-            _vertices.Add(new Vertex(new Vector2f( 1,  1), new Color(255, 255, 255, 255), texCoord3));
-            _vertices.Add(new Vertex(new Vector2f(-1,  1), new Color(255, 255, 255, 255), texCoord4));
+            _vertices.Add(new Vertex(new Vector2f(-1, -1), new Color(255, 255, 255, 255), new Vector2f(x + 0, y + 0)));
+            _vertices.Add(new Vertex(new Vector2f( 1, -1), new Color(255, 255, 255, 255), new Vector2f(x + w, y + 0)));
+            _vertices.Add(new Vertex(new Vector2f( 1,  1), new Color(255, 255, 255, 255), new Vector2f(x + w, y + h)));
+            _vertices.Add(new Vertex(new Vector2f(-1,  1), new Color(255, 255, 255, 255), new Vector2f(x + 0, y + h)));
         }
 
         /// <summary>
         /// Get all the vertices that compose the actual frame
         /// </summary>
         /// <returns> Vertex array </returns>
-        public Vertex[] GetFrame()
+        public override Vertex[] GetVertices()
         {
             return new Vertex[]
             {
@@ -92,11 +84,6 @@ namespace SFML_Engine.GameObjects.GraphicObjects
         /// </summary>
         public void Update()
         {
-            if(_type == AnimationType.STATIC)
-            {
-                return;
-            }
-
             _timeAcc += GameTime.DeltaTimeU;
 
             if(_timeAcc >= _duration)

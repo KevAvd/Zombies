@@ -41,14 +41,24 @@ namespace ZombiesGame
                 //Handles collision
                 if (obj.GetType().IsSubclassOf(typeof(Character)))
                 {
-                    if(obj.GetType().Name == "Zombie")
+                    if ((obj as Character).Health <= 0)
+                    {
+                        continue;
+                    }
+
+                    if (obj.GetType().Name == "Zombie")
                     {
                         zombieCount++;
                     }
 
-                    foreach (Character c in Objects)
+                    foreach (GameObject c in Objects)
                     {
-                        if (obj.Equals(c))
+                        if (obj.Equals(c) || !c.GetType().IsSubclassOf(typeof(Character)))
+                        {
+                            continue;
+                        }
+
+                        if ((c as Character).Health <= 0)
                         {
                             continue;
                         }
@@ -67,9 +77,9 @@ namespace ZombiesGame
                 }
             }
 
-            if(zombieCount == 0)
+            if (zombieCount == 0)
             {
-                for(int i = 0; i < nbrOfZombToSpawn; i++)
+                for (int i = 0; i < nbrOfZombToSpawn; i++)
                 {
                     AddGameObj(new Zombie(i * 51, 50));
                 }

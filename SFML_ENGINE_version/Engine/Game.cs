@@ -2,7 +2,9 @@
 using SFML.Window;
 using SFML_Engine.Systems;
 using SFML_Engine.GameObjects;
+using SFML_Engine.GameObjects.GraphicObjects;
 using System.Reflection;
+
 namespace SFML_Engine
 {
     class Game
@@ -32,7 +34,7 @@ namespace SFML_Engine
             int ups = 0;
 
             //Init systems
-            Renderer.State = new RenderStates(new Texture(@"C:\Users\drimi\OneDrive\Bureau\Asset\test.png"));
+            Renderer.State = new RenderStates(new Texture(@"C:\Users\drimi\OneDrive\Bureau\Asset\SpriteSheet.png"));
             Renderer.Target = _window;
             Inputs.Window = _window;
             GameTime.SetFrameRate(144);
@@ -92,9 +94,9 @@ namespace SFML_Engine
                     foreach(GameObject obj in _state.Objects)
                     {
                         //Update animation
-                        if(obj.GraphicObject != null)
+                        if(obj.GraphicObject.GetType() == typeof(Animation))
                         {
-                            obj.GraphicObject.GetAnimation().Update();
+                            (obj.GraphicObject as Animation).Update();
                         }
 
                         //Update script

@@ -8,7 +8,6 @@ namespace SFML_Engine.Enums
 {
     enum AnimationType
     {
-        STATIC,
         NORMAL,
         REVERSE,
         LOOP

@@ -15,6 +15,7 @@ namespace SFML_Engine.Systems
     {
         //Vertices
         static List<Vertex> _Vertices_Quads = new List<Vertex>();           //All quads primitives to render
+        static List<Vertex> _Vertices_Quads_Background = new List<Vertex>();//All quads primitives to render on background
         static List<Vertex> _Vertices_Lines = new List<Vertex>();           //All lines primitives to render
         static List<Vertex> _Vertices_Triangles = new List<Vertex>();       //All triangles primitives to render
 
@@ -56,15 +57,23 @@ namespace SFML_Engine.Systems
             //Set vertices position to world space
             foreach (GameObject obj in gameObjects)
             {
-                ObjectSpaceToWorldSpace(obj.GraphicObject.GetAnimation().GetFrame(), obj.Transformable);
+                ObjectSpaceToWorldSpace(obj);
+                if(obj.PhysicObject == null) { continue; }
                 if (RENDER_AABB && obj.PhysicObject.GetType() == typeof(AABB)) { DrawAABB((AABB)obj.PhysicObject, _Color_AABB); }
             }
 
             //Clear last image
             _rndr_Target.Clear(_Color_Backgroud);
 
-            //Render Quads
-            if(_Vertices_Quads.Count > 0)
+            //Render background quads
+            if (_Vertices_Quads.Count > 0)
+            {
+                _rndr_Target.Draw(_Vertices_Quads_Background.ToArray(), PrimitiveType.Quads, _rndr_State);
+                _Vertices_Quads_Background.Clear();
+            }
+
+            //Render quads
+            if (_Vertices_Quads.Count > 0)
             {
                 _rndr_Target.Draw(_Vertices_Quads.ToArray(), PrimitiveType.Quads, _rndr_State);
                 _Vertices_Quads.Clear();
@@ -100,21 +109,44 @@ namespace SFML_Engine.Systems
         /// </summary>
         /// <param name="vertices"> Vertices to transform </param>
         /// <param name="transformable"></param>
-        static void ObjectSpaceToWorldSpace(Vertex[] vertices, Transformable transformable)
+        static void ObjectSpaceToWorldSpace(GameObject obj)
         {
-            Vertex[] vertices2 = new Vertex[vertices.Length];
+            Vertex[] vertices = obj.GraphicObject.GetVertices();
+            Vector2f position;
 
-            //Set vertices to World space
             for (int i = 0; i < vertices.Length; i++)
             {
-                vertices2[i].Position = LinearAlgebra.ScaleVector(vertices[i].Position, transformable.Scale);
-                vertices2[i].Position = LinearAlgebra.VectorRotation(vertices2[i].Position, transformable.Rotation) + transformable.Position;
-                vertices2[i].TexCoords = vertices[i].TexCoords;
-                vertices2[i].Color = vertices[i].Color;
-            }
+                if (obj.IsRelative())
+                {
+                    position = LinearAlgebra.VectorRotation(LinearAlgebra.ScaleVector(vertices[i].Position, obj.Scale), obj.Rotation);
+                    position += obj.Position;
+                    position = LinearAlgebra.VectorRotation(position, obj.Relative.Rotation);
+                    position += obj.Relative.Position;
+                }
+                else
+                {
+                    position = LinearAlgebra.VectorRotation(LinearAlgebra.ScaleVector(vertices[i].Position, obj.Scale), obj.Rotation) + obj.Position;
+                }
 
-            //Add vertices to list
-            _Vertices_Quads.AddRange(vertices2);
+                if (obj.GraphicObject.Background)
+                {
+                    //Add vertex
+                    _Vertices_Quads_Background.Add(new Vertex(
+                        position,
+                        vertices[i].Color,
+                        vertices[i].TexCoords
+                    ));
+
+                    continue;
+                }
+
+                //Add vertex
+                _Vertices_Quads.Add(new Vertex(
+                    position,
+                    vertices[i].Color,
+                    vertices[i].TexCoords
+                ));
+            }
         }
 
         /// <summary>

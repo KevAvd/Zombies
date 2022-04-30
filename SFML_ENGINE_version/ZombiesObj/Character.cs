@@ -37,12 +37,6 @@ namespace ZombiesGame
 
         public override void OnUpdate()
         {
-            //Kill character if dead
-            if(_health == 0)
-            {
-                Destroy();
-            }
-
             //Move character
             Position += LinearAlgebra.NormalizeVector(_movement) * _speed * GameTime.DeltaTimeU;
 
@@ -50,22 +44,6 @@ namespace ZombiesGame
             Position += Velocity * GameTime.DeltaTimeU;
             _velocity.X *= 0.9f;
             _velocity.Y *= 0.9f;
-            //if (_velocity.X > 1 || _velocity.X < 0)
-            //{
-            //    _velocity.X *= 0.9f;
-            //}
-            //else
-            //{
-            //    _velocity.X = 0;
-            //}
-            //if (_velocity.Y > 1 || _velocity.Y < 0)
-            //{
-            //    _velocity.Y *= 0.9f;
-            //}
-            //else
-            //{
-            //    _velocity.Y = 0;
-            //}
         }
     }
 }
