@@ -12,4 +12,17 @@ namespace SFML_Engine.Enums
         REVERSE,
         LOOP
     }
+
+    enum GraphicState
+    {
+        NORMAL,
+        HIDDEN,
+        BACKGROUND,
+    }
+
+    enum PhysicState
+    {
+        NORMAL,
+        NOCLIP
+    }
 }

@@ -68,6 +68,21 @@ namespace SFML_Engine.GameObjects.PhysicObjects
         /// Constructor
         /// </summary>
         /// <param name="origin"> Ray's origin </param>
+        /// <param name="angle"> Ray's angle in radian </param>
+        /// <param name="length"> Ray's length </param>
+        public Ray(Vector2f origin, float angle, float length)
+        {
+            _vertices = new Vertex[2];
+            _vertices[0].Position = origin;
+            _vertices[1].Position = origin + LinearAlgebra.VectorRotation(new Vector2f(length, 0), angle);
+            _type = RayType.HITPOINT;
+            UpdatePosition(origin);
+        }
+
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="origin"> Ray's origin </param>
         /// <param name="direction"> Ray's hitPoint </param>
         /// <param name="length"> Ray's length </param>
         public Ray(Vector2f origin, Vector2f hitPoint)

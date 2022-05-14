@@ -18,13 +18,14 @@ namespace ZombiesGame
     class Main : GameState
     {
         int nbrOfZombToSpawn = 10;
+        Player player = new Player();
+
         public override void OnStart()
         {
-            AddGameObj(PlayerSGLTN.GetInstance().Player);
-            AddGameObj(new Zombie(0, 0));
-            AddGameObj(new Zombie(1920, 1080));
-            AddGameObj(new Zombie(1920, 0));
-            AddGameObj(new Zombie(0, 1080));
+            AddGameObj(player);
+            AddGameObj(new Pistol(200,200,player));
+            AddGameObj(new Rifle(1900,1000,player));
+            AddGameObj(new Shotgun(1800,200,player));
         }
 
         public override void OnUpdate()
@@ -81,7 +82,8 @@ namespace ZombiesGame
             {
                 for (int i = 0; i < nbrOfZombToSpawn; i++)
                 {
-                    AddGameObj(new Zombie(i * 51, 50));
+                    Zombie z = new Zombie(i * 51, 50, player);
+                    AddGameObj(z);
                 }
 
                 nbrOfZombToSpawn += 10;

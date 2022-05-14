@@ -1,21 +1,26 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using SFML.System;
+﻿using SFML.System;
 using SFML.Graphics;
+using SFML_Engine.Enums;
 
 namespace SFML_Engine.GameObjects.PhysicObjects
 {
     abstract class PhysicObject
     {
-        protected Vertex[] _vertices;                                                 //Physic object's vertices
+        //Property
+        protected Vertex[] _vertices;                   //Physic object's vertices
+
+        //State
+        PhysicState _phyState;                          //Physic object's state
 
         /// <summary>
         /// Get vertices
         /// </summary>
         public Vertex[] Vertices { get => _vertices; }
+
+        /// <summary>
+        /// Get/Set physic object state
+        /// </summary>
+        internal PhysicState State { get => _phyState; set => _phyState = value; }
 
         /// <summary>
         /// Get all points that represent the physic object

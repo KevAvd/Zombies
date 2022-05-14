@@ -6,20 +6,52 @@ using SFML_Engine.GameObjects.GraphicObjects;
 using SFML_Engine.GameObjects.PhysicObjects;
 using SFML_Engine.Systems;
 using SFML_Engine.Mathematics;
+using System;
+using System.Collections.Generic;
 
 namespace ZombiesGame
 {
     class Player : Character
     {
+        //Time
         float _timeAcc = 0;
         float _rifleCooldown = 0.100f;
         float _pistolCooldown = 0.3f;
-        Sound _gunShot = new Sound(new SoundBuffer(@"C:\Users\drimi\OneDrive\Bureau\Asset\Sounds\GunShot.wav"));
+
+        //Weapon property
+        Weapon _weapon;
+
+        //Boolean
         bool _rifle = false;
 
         //Sprites
         GameSprite _Sprite_Pistol;
+        GameSprite _Sprite_idle;
         GameSprite _Sprite_Rifle;
+
+        //Animations
+        Animation _Anim_PistolReload;
+        Animation _Anim_RifleReload;
+
+        /// <summary>
+        /// Get/Set weapon
+        /// </summary>
+        internal Weapon Weapon 
+        { 
+            get { return _weapon; }
+            set
+            {
+                if(value.GetType() == typeof(Pistol))
+                {
+                    _graphicObject = _Sprite_Pistol;
+                }
+                else
+                {
+                    _graphicObject = _Sprite_Rifle;
+                }
+                _weapon = value;
+            }
+        }
 
         /// <summary>
         /// Constructor
@@ -28,17 +60,30 @@ namespace ZombiesGame
         {
             //Set speed
             _speed = 500;
-            _health = 500;
+            _health = 5;
 
             //Set AABB
             _physicObject = new AABB(new Vector2f(500, 500), 100, 100);
 
             //Set sprites
-            _Sprite_Pistol = new GameSprite(0, 16, 16, 16);
-            _Sprite_Rifle = new GameSprite(16, 16, 16, 16);
+            _Sprite_Pistol = new GameSprite(0, 0, 16, 16);
+            _Sprite_Rifle = new GameSprite(16, 0, 16, 16);
+            _Sprite_idle = new GameSprite(48, 48, 16, 16);
+
+            //Set animations
+            _Anim_PistolReload = new Animation(200);
+            _Anim_PistolReload.AddFrame(0, 0, 16, 16);
+            _Anim_PistolReload.AddFrame(0, 16, 16, 16);
+            _Anim_PistolReload.AddFrame(0, 32, 16, 16);
+            _Anim_PistolReload.AddFrame(0, 16, 16, 16);
+            _Anim_RifleReload = new Animation(200);
+            _Anim_RifleReload.AddFrame(16, 0, 16, 16);
+            _Anim_RifleReload.AddFrame(16, 16, 16, 16);
+            _Anim_RifleReload.AddFrame(16, 32, 16, 16);
+            _Anim_RifleReload.AddFrame(16, 16, 16, 16);
 
             //Set graphic object
-            _graphicObject = _Sprite_Pistol;
+            _graphicObject = _Sprite_idle;
 
             //Set transformable
             _transformable.Position = new Vector2f(500, 500);
@@ -75,33 +120,22 @@ namespace ZombiesGame
             {
                 _movement += new Vector2f(1, 0);
             }
-            if (Inputs.IsClicked(Keyboard.Key.Q))
+            if (Inputs.IsClicked(Keyboard.Key.R))
             {
-                if (_rifle)
-                {
-                    _graphicObject = _Sprite_Pistol;
-                    _rifle = false;
-                }
-                else
+                if(_weapon.GetType() == typeof(Pistol)) { _Anim_PistolReload.Restart(); _graphicObject = _Anim_PistolReload; }
+                else { _Anim_RifleReload.Restart(); _graphicObject = _Anim_RifleReload; }
+            }
+
+            //Handle animation
+            if(_graphicObject.GetType() == typeof(Animation))
+            {
+                if (_rifle && _Anim_RifleReload.Count == 1)
                 {
                     _graphicObject = _Sprite_Rifle;
-                    _rifle = true;
                 }
-            }
-            if (_rifle)
-            {
-                if (Inputs.IsPressed(Mouse.Button.Left) && _timeAcc >= _rifleCooldown)
+                else if (!_rifle && _Anim_PistolReload.Count == 1)
                 {
-                    _timeAcc = 0;
-                    Shoot();
-                }
-            }
-            else
-            {
-                if (Inputs.IsClicked(Mouse.Button.Left) && _timeAcc >= _pistolCooldown)
-                {
-                    _timeAcc = 0;
-                    Shoot();
+                    _graphicObject = _Sprite_Pistol;
                 }
             }
 
@@ -111,40 +145,6 @@ namespace ZombiesGame
 
             //Execute base methode
             base.OnUpdate();
-        }
-
-        void Shoot()
-        {
-            //Play gun shot sound
-            _gunShot.Play();
-
-            //Add muzzle flash
-            if (_rifle) { GetGameState().AddGameObj(new MuzzleFlash(this,100, -25)); }
-            else { GetGameState().AddGameObj(new MuzzleFlash(this, 100, 0)); }
-
-            //Detect shot collision
-            Ray shot = new Ray(Position, Inputs.GetMousePosition(true) - Position, 4000);
-            List<Vector2f> veclist = new List<Vector2f>();
-            foreach(GameObject obj in GetGameState().Objects)
-            {
-                if(obj.GetType() != typeof(Zombie))
-                {
-                    continue;
-                }
-
-                if(CollisionDetection.AABB_RAY(obj.PhysicObject as AABB, shot, out Vector2f pNear, out Vector2f pFar, out Vector2f normal))
-                {
-                    (obj as Zombie).Velocity = LinearAlgebra.NormalizeVector(pNear - Position) * 500;
-                    if (_rifle)
-                    {
-                        (obj as Zombie).Health -= 25;
-                    }
-                    else
-                    {
-                        (obj as Zombie).Health -= 20;
-                    }
-                }
-            }
         }
     }
 }

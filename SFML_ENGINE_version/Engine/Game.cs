@@ -4,6 +4,9 @@ using SFML_Engine.Systems;
 using SFML_Engine.GameObjects;
 using SFML_Engine.GameObjects.GraphicObjects;
 using System.Reflection;
+using System.Collections.Generic;
+using System;
+using System.Linq;
 
 namespace SFML_Engine
 {

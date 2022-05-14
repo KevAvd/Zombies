@@ -24,7 +24,7 @@ namespace ZombiesGame
             Relative = relative;
 
             //Set sprite
-            _sprite_Flash = new GameSprite(0, 32, 16, 16);
+            _sprite_Flash = new GameSprite(64, 16, 16, 16);
 
             //Set graphic object
             _graphicObject = _sprite_Flash;

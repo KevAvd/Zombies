@@ -8,6 +8,7 @@ using SFML.Graphics;
 using SFML_Engine.Mathematics;
 using SFML_Engine.GameObjects;
 using SFML_Engine.GameObjects.PhysicObjects;
+using SFML_Engine.Enums;
 
 namespace SFML_Engine.Systems
 {
@@ -57,6 +58,8 @@ namespace SFML_Engine.Systems
             //Set vertices position to world space
             foreach (GameObject obj in gameObjects)
             {
+                if(obj.GraphicObject == null) { continue; }
+                if(obj.GraphicObject.State == GraphicState.HIDDEN) { continue; }
                 ObjectSpaceToWorldSpace(obj);
                 if(obj.PhysicObject == null) { continue; }
                 if (RENDER_AABB && obj.PhysicObject.GetType() == typeof(AABB)) { DrawAABB((AABB)obj.PhysicObject, _Color_AABB); }
@@ -128,7 +131,7 @@ namespace SFML_Engine.Systems
                     position = LinearAlgebra.VectorRotation(LinearAlgebra.ScaleVector(vertices[i].Position, obj.Scale), obj.Rotation) + obj.Position;
                 }
 
-                if (obj.GraphicObject.Background)
+                if (obj.GraphicObject.State == GraphicState.BACKGROUND)
                 {
                     //Add vertex
                     _Vertices_Quads_Background.Add(new Vertex(

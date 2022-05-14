@@ -18,6 +18,7 @@ namespace SFML_Engine.GameObjects.GraphicObjects
         float _timeAcc = 0;                                 //Accumulate time
         float _duration;                                    //Duration of one frame
         int _increment = 1;                                 //Used for incrementing the index when loop animating
+        int _animCount = 0;                                 //Count number of time the animation has been played
         AnimationType _type;                                //Type of animation
 
         /// <summary>
@@ -29,6 +30,11 @@ namespace SFML_Engine.GameObjects.GraphicObjects
         /// Get/Set type
         /// </summary>
         internal AnimationType Type { get => _type; set { _type = value; _timeAcc = 0; } }
+
+        /// <summary>
+        /// Get animation count
+        /// </summary>
+        public int Count { get => _animCount; }
 
         /// <summary>
         /// Constructor
@@ -108,6 +114,7 @@ namespace SFML_Engine.GameObjects.GraphicObjects
             if(_index + 1 > FrameCount())
             {
                 _index = 0;
+                _animCount++;
             }
         }
 
@@ -121,6 +128,7 @@ namespace SFML_Engine.GameObjects.GraphicObjects
             if (_index < 0)
             {
                 _index = FrameCount() - 1;
+                _animCount++;
             }
         }
 
@@ -136,9 +144,25 @@ namespace SFML_Engine.GameObjects.GraphicObjects
             else if(_index == 0)
             {
                 _increment = 1;
+                _animCount++;
             }
 
             _index += _increment;
+        }
+
+        /// <summary>
+        /// Restart animation
+        /// </summary>
+        public void Restart()
+        {
+            _animCount = 0;
+
+            switch (_type)
+            {
+                case AnimationType.LOOP:
+                case AnimationType.NORMAL: _index = 0; return;
+                case AnimationType.REVERSE: _index = FrameCount() - 1; return;
+            }
         }
     }
 }
