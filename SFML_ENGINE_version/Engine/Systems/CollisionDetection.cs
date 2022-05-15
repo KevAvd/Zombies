@@ -134,7 +134,7 @@ namespace SFML_Engine.Systems
             float radius_sum = circle1.Radius + circle2.Radius;
 
             //Calculate distance between both circles
-            float d = LinearAlgebra.GetVectorLength(pos2 - pos1);
+            float d = GameMath.GetVectorLength(pos2 - pos1);
 
             //Check for collision
             if(d <= radius_sum)

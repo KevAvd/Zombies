@@ -14,34 +14,19 @@ namespace SFML_Engine.GameObjects.PhysicObjects
         //Ray's property
         Vector2f _direction;            //Direction vector
         float _length;                  //Ray's length
+        float _rotation;                //Ray's rotation
         RayType _type;                  //Ray's type
 
-        /// <summary>
-        /// Get/Set direction vector
-        /// </summary>
-        public Vector2f Direction
-        {
-            get { return _direction; }
-            set { if (_type == RayType.DIRECTION) { _direction = LinearAlgebra.NormalizeVector(value); } }
-        }
 
         /// <summary>
-        /// Get/Set length
+        /// Get length
         /// </summary>
-        public float Length 
-        { 
-            get { return _length; }
-            set { if (_type == RayType.DIRECTION) { _length = value; } }
-        }
+        public float Length { get => _length; } 
 
         /// <summary>
-        /// Get/Set hitpoint
+        /// Get rotation
         /// </summary>
-        public Vector2f HitPoint
-        {
-            get { return _vertices[1].Position; }
-            set { if (_type == RayType.HITPOINT) { _vertices[1].Position = value; } }
-        }
+        public float Rotation { get => _rotation; }
 
         enum RayType
         {
@@ -58,7 +43,8 @@ namespace SFML_Engine.GameObjects.PhysicObjects
         public Ray(Vector2f origin, Vector2f direction, float length)
         {
             _vertices = new Vertex[2];
-            _direction = LinearAlgebra.NormalizeVector(direction);
+            _direction = GameMath.NormalizeVector(direction);
+            _rotation = (float)Math.Atan2(direction.Y - origin.Y, direction.X - origin.X);
             _length = length;
             _type = RayType.DIRECTION;
             UpdatePosition(origin);
@@ -74,8 +60,10 @@ namespace SFML_Engine.GameObjects.PhysicObjects
         {
             _vertices = new Vertex[2];
             _vertices[0].Position = origin;
-            _vertices[1].Position = origin + LinearAlgebra.VectorRotation(new Vector2f(length, 0), angle);
+            _vertices[1].Position = origin + GameMath.VectorRotation(new Vector2f(length, 0), angle);
+            _rotation = angle;
             _type = RayType.HITPOINT;
+            _length = length;
             UpdatePosition(origin);
         }
 
@@ -90,6 +78,7 @@ namespace SFML_Engine.GameObjects.PhysicObjects
             _vertices = new Vertex[2];
             _vertices[0].Position = origin;
             _vertices[1].Position = hitPoint;
+            _rotation = (float)Math.Atan2(hitPoint.Y - origin.Y, hitPoint.X - origin.X);
             _type = RayType.HITPOINT;
             UpdatePosition(origin);
         }
@@ -101,8 +90,8 @@ namespace SFML_Engine.GameObjects.PhysicObjects
             if(_type == RayType.HITPOINT)
             {
                 Vector2f direction = _vertices[1].Position - _vertices[0].Position;
-                _length = LinearAlgebra.GetVectorLength(direction);
-                _direction = LinearAlgebra.NormalizeVector(direction);
+                _length = GameMath.GetVectorLength(direction);
+                _direction = GameMath.NormalizeVector(direction);
                 return;
             }
 

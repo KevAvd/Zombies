@@ -17,15 +17,15 @@ namespace ZombiesGame
 {
     class Main : GameState
     {
-        int nbrOfZombToSpawn = 10;
         Player player = new Player();
 
         public override void OnStart()
         {
+            Renderer.MainFont = new Font(@"C:\Users\drimi\OneDrive\Bureau\Asset\Fonts\prstartk.ttf");
             AddGameObj(player);
-            AddGameObj(new Pistol(200,200,player));
-            AddGameObj(new Rifle(1900,1000,player));
-            AddGameObj(new Shotgun(1800,200,player));
+            AddGameObj(new Pistol(new Vector2f(200,200) ,player));
+            AddGameObj(new Rifle(new Vector2f(1800,1000) ,player));
+            AddGameObj(new Shotgun(new Vector2f(1800,200) ,player));
         }
 
         public override void OnUpdate()
@@ -80,13 +80,19 @@ namespace ZombiesGame
 
             if (zombieCount == 0)
             {
-                for (int i = 0; i < nbrOfZombToSpawn; i++)
-                {
-                    Zombie z = new Zombie(i * 51, 50, player);
-                    AddGameObj(z);
-                }
+                Zombie[] zombies = new Zombie[10];
+                zombies[0] = new Zombie(50, 50, player);
+                zombies[1] = new Zombie(100, 50, player);
+                zombies[2] = new Zombie(1870, 50, player);
+                zombies[3] = new Zombie(1820, 50, player);
+                zombies[4] = new Zombie(50, 1030, player);
+                zombies[5] = new Zombie(100, 1030, player);
+                zombies[6] = new Zombie(1870, 1030, player);
+                zombies[7] = new Zombie(1820, 1030, player);
+                zombies[8] = new Zombie(910, 50, player);
+                zombies[9] = new Zombie(910, 1030, player);
 
-                nbrOfZombToSpawn += 10;
+                foreach(Zombie z in zombies) AddGameObj(z);
             }
         }
     }

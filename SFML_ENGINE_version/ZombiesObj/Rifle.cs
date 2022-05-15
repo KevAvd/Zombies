@@ -21,57 +21,47 @@ namespace ZombiesGame
         //Sounds
         Sound _gunShot = new Sound(new SoundBuffer(@"C:\Users\drimi\OneDrive\Bureau\Asset\Sounds\GunShot.wav"));
 
-        public Rifle(float x, float y, Player p)
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="pos"> Position </param>
+        /// <param name="p"> Ref to player </param>
+        public Rifle(Vector2f pos, Player p)
         {
-            //Set player
+            //Set player 
             _player = p;
 
-            //Set weapon
-            _fireMode = FireMode.AUTO;
-            _weaponState = WeaponState.ONGROUND;
+            //Set physic object
+            _physicObject = new AABB(pos, 50, 50);
+
+            //Set weapons property
             _dammage = 20;
             _fireRate = 0.1f;
-
-            //Set physic object
-            _physicObject = new AABB(new Vector2f(x, y), 50, 50);
+            _maxammo = 30;
+            _ammo = 30;
+            _fireMode = FireMode.AUTO;
+            _weaponState = WeaponState.ONGROUND;
+            _ammoType = AmmoType.RIFLE;
+            _shotDistance = 4000;
+            _shotsRay = new Ray[1];
+            _shotSound = new Sound(new SoundBuffer(@"C:\Users\drimi\OneDrive\Bureau\Asset\Sounds\GunShot.wav"));
+            _shotOffset = 0;
 
             //Set sprites
             _sprite_idle = new GameSprite(64, 0, 16, 16);
+
+            //Set muzzle flash
+            _muzzleFlashPosition = new Vector2f(100, -25);
 
             //Set graphic object
             _graphicObject = _sprite_idle;
             _graphicObject.State = GraphicState.BACKGROUND;
 
             //Set transformable
-            _transformable.Position = new Vector2f(x, y);
+            _transformable.Position = pos;
             _transformable.Rotation = 0;
             _transformable.Scale = new Vector2f(50, 50);
             _transformable.Origin = new Vector2f(0, 0);
-        }
-
-        protected override void Shoot()
-        {
-            //Play gun shot sound
-            _gunShot.Play();
-
-            //Add muzzle flash
-            GetGameState().AddGameObj(new MuzzleFlash(_player, 100, -25));
-
-            //Detect shot collision
-            Ray shot = new Ray(Position, Inputs.GetMousePosition(true) - Position, 4000);
-            foreach (GameObject obj in GetGameState().Objects)
-            {
-                if (obj.GetType() != typeof(Zombie))
-                {
-                    continue;
-                }
-
-                if (CollisionDetection.AABB_RAY(obj.PhysicObject as AABB, shot, out Vector2f pNear, out Vector2f pFar, out Vector2f normal))
-                {
-                    (obj as Zombie).Velocity = LinearAlgebra.NormalizeVector(pNear - Position) * 500;
-                    (obj as Zombie).Health -= _dammage;
-                }
-            }
         }
     }
 }

@@ -20,6 +20,9 @@ namespace SFML_Engine.Systems
         static List<Vertex> _Vertices_Lines = new List<Vertex>();           //All lines primitives to render
         static List<Vertex> _Vertices_Triangles = new List<Vertex>();       //All triangles primitives to render
 
+        //texts
+        static List<Text> _texts = new List<Text>();                        //All text to render
+
         //Shapes
         static List<Shape> _shapes = new List<Shape>();                     //All shapes to render
 
@@ -30,6 +33,9 @@ namespace SFML_Engine.Systems
         //Colors
         static Color _Color_Backgroud = new Color(10, 102, 62);             //Background color
         static Color _Color_AABB = Color.Yellow;                            //AABBs color
+
+        //Fonts
+        static Font _mainFont;                                              //Main font
 
         //boolean
         static bool RENDER_AABB = false;                                    //Render AABBs if true
@@ -49,6 +55,11 @@ namespace SFML_Engine.Systems
         /// Get/Set render target
         /// </summary>
         public static RenderTarget Target { get => _rndr_Target; set => _rndr_Target = value; }
+
+        /// <summary>
+        /// Get/Set main font
+        /// </summary>
+        public static Font MainFont { get => _mainFont; set => _mainFont = value; }
 
         /// <summary>
         /// Render all sprite
@@ -105,6 +116,16 @@ namespace SFML_Engine.Systems
                 }
                 _shapes.Clear();
             }
+
+            //Render texts
+            if(_texts.Count > 0)
+            {
+                foreach(Text text in _texts)
+                {
+                    _rndr_Target.Draw(text);
+                }
+                _texts.Clear();
+            }
         }
 
         /// <summary>
@@ -121,14 +142,14 @@ namespace SFML_Engine.Systems
             {
                 if (obj.IsRelative())
                 {
-                    position = LinearAlgebra.VectorRotation(LinearAlgebra.ScaleVector(vertices[i].Position, obj.Scale), obj.Rotation);
+                    position = GameMath.VectorRotation(GameMath.ScaleVector(vertices[i].Position, obj.Scale), obj.Rotation);
                     position += obj.Position;
-                    position = LinearAlgebra.VectorRotation(position, obj.Relative.Rotation);
+                    position = GameMath.VectorRotation(position, obj.Relative.Rotation);
                     position += obj.Relative.Position;
                 }
                 else
                 {
-                    position = LinearAlgebra.VectorRotation(LinearAlgebra.ScaleVector(vertices[i].Position, obj.Scale), obj.Rotation) + obj.Position;
+                    position = GameMath.VectorRotation(GameMath.ScaleVector(vertices[i].Position, obj.Scale), obj.Rotation) + obj.Position;
                 }
 
                 if (obj.GraphicObject.State == GraphicState.BACKGROUND)
@@ -150,6 +171,18 @@ namespace SFML_Engine.Systems
                     vertices[i].TexCoords
                 ));
             }
+        }
+
+        /// <summary>
+        /// Render text to screen
+        /// </summary>
+        /// <param name="txt"> Text to render </param>
+        /// <param name="charSize"> Character size </param>
+        /// <param name="pos"> Text position </param>
+        public static void RenderText(string txt, uint charSize, Vector2f pos)
+        {
+            _texts.Add(new Text(txt, MainFont, charSize));
+            _texts.Last().Position = pos;
         }
 
         /// <summary>

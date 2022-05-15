@@ -151,6 +151,36 @@ namespace SFML_Engine.Systems
         }
 
         /// <summary>
+        /// Check if key didn't change state
+        /// </summary>
+        /// <param name="key"> Key to check </param>
+        /// <returns> True if key didn't change state </returns>
+        public static bool IsSameState(Keyboard.Key key)
+        {
+            if(_oldState[(int)key] == _actState[(int)key])
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Check if button didn't change state
+        /// </summary>
+        /// <param name="button"> Button to check </param>
+        /// <returns> True if button didn't change state </returns>
+        public static bool IsSameState(Mouse.Button button)
+        {
+            if (_oldState[NBR_OF_KEYS + (int)button] == _actState[NBR_OF_KEYS + (int)button])
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+        /// <summary>
         /// Get mouse position
         /// </summary>
         /// <param name="relative"> Determine if the returned position is relative to the window </param>

@@ -21,8 +21,10 @@ namespace ZombiesGame
         //Weapon property
         Weapon _weapon;
 
-        //Boolean
-        bool _rifle = false;
+        //Ammos
+        int _pistolAmmo = 14;
+        int _rifleAmmo = 0;
+        int _shotgunAmmo = 0;
 
         //Sprites
         GameSprite _Sprite_Pistol;
@@ -33,10 +35,21 @@ namespace ZombiesGame
         Animation _Anim_PistolReload;
         Animation _Anim_RifleReload;
 
+        //State
+        PlayerState _playerState;
+
+        //Enums
+        public enum PlayerState
+        {
+            NORMAL,
+            SPRINTING,
+            RELOADING
+        }
+
         /// <summary>
         /// Get/Set weapon
         /// </summary>
-        internal Weapon Weapon 
+        public Weapon Weapon 
         { 
             get { return _weapon; }
             set
@@ -52,6 +65,26 @@ namespace ZombiesGame
                 _weapon = value;
             }
         }
+
+        /// <summary>
+        /// Get/Set pistol ammunition
+        /// </summary>
+        public int PistolAmmo { get => _pistolAmmo; set => _pistolAmmo = value; }
+
+        /// <summary>
+        /// Get/Set rifle ammunition
+        /// </summary>
+        public int RifleAmmo { get => _rifleAmmo; set => _rifleAmmo = value; }
+
+        /// <summary>
+        /// Get/Set shotgun ammunition
+        /// </summary>
+        public int ShotgunAmmo { get => _shotgunAmmo; set => _shotgunAmmo = value; }
+
+        /// <summary>
+        /// Get player state
+        /// </summary>
+        public PlayerState State { get => _playerState;}
 
         /// <summary>
         /// Constructor
@@ -120,22 +153,43 @@ namespace ZombiesGame
             {
                 _movement += new Vector2f(1, 0);
             }
-            if (Inputs.IsClicked(Keyboard.Key.R))
+            if (Inputs.IsPressed(Mouse.Button.Left) && _weapon != null && _graphicObject.GetType() == typeof(GameSprite))
             {
-                if(_weapon.GetType() == typeof(Pistol)) { _Anim_PistolReload.Restart(); _graphicObject = _Anim_PistolReload; }
+                _weapon.Shoot(Mouse.Button.Left);
+            }
+            if (Inputs.IsClicked(Keyboard.Key.R) && _weapon.Reload())
+            {
+                if (_weapon.GetType() == typeof(Pistol)) { _Anim_PistolReload.Restart(); _graphicObject = _Anim_PistolReload; }
                 else { _Anim_RifleReload.Restart(); _graphicObject = _Anim_RifleReload; }
             }
 
             //Handle animation
-            if(_graphicObject.GetType() == typeof(Animation))
+            if(_graphicObject.GetType() == typeof(Animation) && (_graphicObject as Animation).Count >= 1)
             {
-                if (_rifle && _Anim_RifleReload.Count == 1)
+                if(_weapon.GetType() == typeof(Pistol))
+                {
+                    _graphicObject = _Sprite_Pistol;
+                }
+                else
                 {
                     _graphicObject = _Sprite_Rifle;
                 }
-                else if (!_rifle && _Anim_PistolReload.Count == 1)
+            }
+
+            //UI
+            if (_weapon != null)
+            {
+                if (_weapon.GetType() == typeof(Pistol))
                 {
-                    _graphicObject = _Sprite_Pistol;
+                    Renderer.RenderText($"{_weapon.Ammo} / {_pistolAmmo}", 45, new Vector2f(1600, 990));
+                }
+                else if (_weapon.GetType() == typeof(Rifle))
+                {
+                    Renderer.RenderText($"{_weapon.Ammo} / {_rifleAmmo}", 45, new Vector2f(1600, 990));
+                }
+                else
+                {
+                    Renderer.RenderText($"{_weapon.Ammo} / {_shotgunAmmo}", 45, new Vector2f(1600, 990));
                 }
             }
 

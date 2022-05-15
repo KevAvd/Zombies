@@ -38,7 +38,7 @@ namespace ZombiesGame
         public override void OnUpdate()
         {
             //Move character
-            Position += LinearAlgebra.NormalizeVector(_movement) * _speed * GameTime.DeltaTimeU;
+            Position += GameMath.NormalizeVector(_movement) * _speed * GameTime.DeltaTimeU;
 
             //Handle velocity
             Position += Velocity * GameTime.DeltaTimeU;
