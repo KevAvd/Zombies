@@ -18,9 +18,6 @@ namespace ZombiesGame
         //Sprites
         GameSprite _sprite_idle;
 
-        //Sounds
-        Sound _gunShot = new Sound(new SoundBuffer(@"C:\Users\drimi\OneDrive\Bureau\Asset\Sounds\GunShot.wav"));
-
         /// <summary>
         /// Constructor
         /// </summary>
@@ -44,7 +41,7 @@ namespace ZombiesGame
             _ammoType = AmmoType.RIFLE;
             _shotDistance = 4000;
             _shotsRay = new Ray[1];
-            _shotSound = new Sound(new SoundBuffer(@"C:\Users\drimi\OneDrive\Bureau\Asset\Sounds\GunShot.wav"));
+            _shotSound = new Sound(new SoundBuffer(@"C:\Users\pq34bsi\Desktop\Zombies\Assets\Sounds\GunShot.wav"));
             _shotOffset = 0;
 
             //Set sprites

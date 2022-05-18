@@ -16,6 +16,9 @@ namespace ZombiesGame
         float _deathTimeAcc;
         bool _dead = false;
 
+        //Random
+        Random _rnd = new Random();
+
         //Player
         Player _player;
 
@@ -62,8 +65,8 @@ namespace ZombiesGame
             {
                 _deathTimeAcc += GameTime.DeltaTimeU;
 
-                //Destroy object 10 second after death
-                if (_deathTimeAcc >= 10)
+                //Destroy object 5 second after death
+                if (_deathTimeAcc >= 5)
                 {
                     Destroy();
                 }
@@ -78,6 +81,7 @@ namespace ZombiesGame
                 _graphicObject.State = GraphicState.BACKGROUND;
                 _transformable.Scale = new Vector2f(100, 50);
                 _dead = true;
+                DropItem();
             }
 
             //Move zombie to player
@@ -91,6 +95,37 @@ namespace ZombiesGame
 
             //Execute base methode
             base.OnUpdate();
+        }
+
+        void DropItem()
+        {
+            //Generate a random number
+            int nbr = _rnd.Next(101);
+
+            if(nbr % 2 == 0)
+            {
+                switch (_rnd.Next(3))
+                {
+                    case 0: GetGameState().AddGameObj(new PistolAmmo(Position, _rnd.Next(20,50), _player)); break;
+                    case 1: GetGameState().AddGameObj(new RifleAmmo(Position, _rnd.Next(30,60), _player)); break;
+                    case 2: GetGameState().AddGameObj(new ShotgunAmmo(Position, _rnd.Next(6,10), _player)); break;
+                }
+            }
+
+            if (nbr % 20 == 0)
+            {
+                GetGameState().AddGameObj(new Pistol(Position, _player));
+            }
+
+            if (nbr % 30 == 0)
+            {
+                GetGameState().AddGameObj(new Rifle(Position, _player));
+            }
+
+            if (nbr % 50 == 0)
+            {
+                GetGameState().AddGameObj(new Shotgun(Position, _player));
+            }
         }
     }
 }

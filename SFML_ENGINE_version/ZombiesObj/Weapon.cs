@@ -33,6 +33,7 @@ namespace ZombiesGame
 
         //Time accumulator
         float _fireTimeAcc = 0;
+        float _destroyTimeAcc = 0;
 
         /// <summary>
         /// Get number of ammo
@@ -72,6 +73,16 @@ namespace ZombiesGame
             switch (_weaponState)
             {
                 case WeaponState.ONGROUND:
+
+                    //Update time accumulator
+                    _destroyTimeAcc += GameTime.DeltaTimeU;
+
+                    //Destroy object if it was on the ground for more than 30 second
+                    if(_destroyTimeAcc >= 30)
+                    {
+                        Destroy();
+                    }
+
                     //Check collision with player
                     if (CollisionDetection.AABB_AABB(_physicObject as AABB, _player.PhysicObject as AABB) && Inputs.IsClicked(Keyboard.Key.E))
                     {

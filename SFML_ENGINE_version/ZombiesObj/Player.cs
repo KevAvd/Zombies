@@ -181,15 +181,15 @@ namespace ZombiesGame
             {
                 if (_weapon.GetType() == typeof(Pistol))
                 {
-                    Renderer.RenderText($"{_weapon.Ammo} / {_pistolAmmo}", 45, new Vector2f(1600, 990));
+                    Renderer.RenderText($"{_weapon.Ammo} / {_pistolAmmo}", 45, new Vector2f(1300, 990));
                 }
                 else if (_weapon.GetType() == typeof(Rifle))
                 {
-                    Renderer.RenderText($"{_weapon.Ammo} / {_rifleAmmo}", 45, new Vector2f(1600, 990));
+                    Renderer.RenderText($"{_weapon.Ammo} / {_rifleAmmo}", 45, new Vector2f(1300, 990));
                 }
                 else
                 {
-                    Renderer.RenderText($"{_weapon.Ammo} / {_shotgunAmmo}", 45, new Vector2f(1600, 990));
+                    Renderer.RenderText($"{_weapon.Ammo} / {_shotgunAmmo}", 45, new Vector2f(1300, 990));
                 }
             }
 

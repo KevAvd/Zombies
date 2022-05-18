@@ -24,7 +24,7 @@ namespace SFML_Engine
         /// </summary>
         public Game()
         {
-            _window = new RenderWindow(VideoMode.DesktopMode, "SFML.NET game !!!");
+            _window = new RenderWindow(VideoMode.DesktopMode, "SFML.NET game !!!", Styles.Fullscreen);
         }
 
         /// <summary>
@@ -37,7 +37,7 @@ namespace SFML_Engine
             int ups = 0;
 
             //Init systems
-            Renderer.State = new RenderStates(new Texture(@"C:\Users\drimi\OneDrive\Bureau\Asset\SpriteSheet.png"));
+            Renderer.State = new RenderStates(new Texture(@"C:\Users\pq34bsi\Desktop\Zombies\Assets\SpriteSheet.png"));
             Renderer.Target = _window;
             Inputs.Window = _window;
             GameTime.SetFrameRate(144);

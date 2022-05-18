@@ -21,11 +21,9 @@ namespace ZombiesGame
 
         public override void OnStart()
         {
-            Renderer.MainFont = new Font(@"C:\Users\drimi\OneDrive\Bureau\Asset\Fonts\prstartk.ttf");
+            Renderer.MainFont = new Font(@"C:\Users\pq34bsi\Desktop\Zombies\Assets\Fonts\prstartk.ttf");
             AddGameObj(player);
-            AddGameObj(new Pistol(new Vector2f(200,200) ,player));
-            AddGameObj(new Rifle(new Vector2f(1800,1000) ,player));
-            AddGameObj(new Shotgun(new Vector2f(1800,200) ,player));
+            AddGameObj(new Pistol(new Vector2f(960, 540), player));
         }
 
         public override void OnUpdate()
