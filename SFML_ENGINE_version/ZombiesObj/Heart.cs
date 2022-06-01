@@ -17,22 +17,27 @@ using SFML.Audio;
 
 namespace ZombiesGame
 {
-    class PistolAmmo : Ammo
+    class Heart : ScriptObject
     {
-        public PistolAmmo(Vector2f pos, int amount, Player p)
+        //Player
+        Player _player;     //Reference to player
+
+        //Property
+        bool _halfHeart;    //Indicate if the heart is full or not
+
+        //Sprites
+        GameSprite _sprite_idle;
+
+        public Heart(Vector2f pos, bool halfHeart ,Player p)
         {
             //Set player
             _player = p;
-
-            //Set weapons property
-            _amount = amount;
-            _type = Weapon.AmmoType.PISTOL;
 
             //Set physic object
             _physicObject = new AABB(pos, 50, 50);
 
             //Set sprites
-            _sprite_idle = new GameSprite(64, 48, 16, 16);
+            _sprite_idle = new GameSprite(32, 64, 16, 16);
 
             //Set graphic object
             _graphicObject = _sprite_idle;
@@ -43,6 +48,31 @@ namespace ZombiesGame
             _transformable.Rotation = 0;
             _transformable.Scale = new Vector2f(50, 50);
             _transformable.Origin = new Vector2f(0, 0);
+        }
+
+        public override void OnStart()
+        {
+
+        }
+
+        public override void OnUpdate()
+        {
+            //Check collision with player
+            if (CollisionDetection.AABB_AABB(_physicObject as AABB, _player.PhysicObject as AABB))
+            {
+                if (_player.Health < _player.MaxHealth)
+                {
+                    if (_halfHeart)
+                    {
+                        _player.Health += 0.5f;
+                    }
+                    else
+                    {
+                        _player.Health += 1.0f;
+                    }
+                }
+                Destroy();
+            }
         }
     }
 }

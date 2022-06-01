@@ -25,7 +25,7 @@ namespace SFML_Engine.GameObjects.GraphicObjects
         /// <param name="h"> Height </param>
         public GameSprite(float x, float y, float w, float h)
         {
-            AddFrame(x, y, w, h);
+            AddSprite(x, y, w, h);
         }
 
         /// <summary>
@@ -35,7 +35,7 @@ namespace SFML_Engine.GameObjects.GraphicObjects
         /// <param name="y"> Top-Left Y position </param>
         /// <param name="w"> Width </param>
         /// <param name="h"> Height </param>
-        public override void AddFrame(float x, float y, float w, float h)
+        public override void AddSprite(float x, float y, float w, float h)
         {
             _vertex1 = new Vertex(new Vector2f(-1, -1), new Color(255, 255, 255, 255), new Vector2f(x, y));
             _vertex2 = new Vertex(new Vector2f( 1, -1), new Color(255, 255, 255, 255), new Vector2f(x + w, y));

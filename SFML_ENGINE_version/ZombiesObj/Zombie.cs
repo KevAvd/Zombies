@@ -112,6 +112,11 @@ namespace ZombiesGame
                 }
             }
 
+            if (nbr % 10 == 0)
+            {
+                GetGameState().AddGameObj(new Heart(Position, false, _player));
+            }
+
             if (nbr % 20 == 0)
             {
                 GetGameState().AddGameObj(new Pistol(Position, _player));

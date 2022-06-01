@@ -23,12 +23,18 @@ namespace ZombiesGame
         {
             Renderer.MainFont = new Font(@"C:\Users\pq34bsi\Desktop\Zombies\Assets\Fonts\prstartk.ttf");
             AddGameObj(player);
+            AddGameObj(new PlayerUI(player));
             AddGameObj(new Pistol(new Vector2f(960, 540), player));
         }
 
         public override void OnUpdate()
         {
             int zombieCount = 0;
+
+            if(player.Health <= 0)
+            {
+                Game.CloseWindow();
+            }
 
             if (Inputs.IsClicked(Keyboard.Key.K))
             {
@@ -71,6 +77,36 @@ namespace ZombiesGame
                             toMove /= 2f;
                             obj.Position += toMove;
                             c.Position -= toMove;
+
+                            if((obj.GetType() == typeof(Zombie) && c.GetType() == typeof(Player)) ||
+                               (obj.GetType() == typeof(Player) && c.GetType() == typeof(Zombie)))
+                            {
+                                Player plyr;
+                                Zombie zmb;
+
+                                if(c.GetType() == typeof(Player))
+                                {
+                                    plyr = c as Player;
+                                    zmb = obj as Zombie;
+                                }
+                                else
+                                {
+                                    plyr = obj as Player;
+                                    zmb = c as Zombie;
+                                }
+
+                                if (plyr.State == Player.PlayerState.HITTED)
+                                {
+                                    continue;
+                                }
+
+                                if (CollisionDetection.AABB_RAY((AABB)plyr.PhysicObject, new Ray(zmb.Position, plyr.Position), out Vector2f pNear, out Vector2f pFar, out Vector2f normal))
+                                {
+                                    player.Health--;
+                                    plyr.Velocity = GameMath.NormalizeVector(plyr.Position- pNear) * 1000;
+                                    plyr.State = Player.PlayerState.HITTED;
+                                }
+                            }
                         }
                     }
                 }

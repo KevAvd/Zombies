@@ -15,9 +15,12 @@ namespace SFML_Engine.Enums
 
     enum GraphicState
     {
-        NORMAL,
-        HIDDEN,
         BACKGROUND,
+        LAYER_1,
+        LAYER_2,
+        LAYER_3,
+        UI,
+        HIDDEN,
     }
 
     enum PhysicState

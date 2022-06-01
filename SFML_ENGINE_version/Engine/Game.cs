@@ -166,5 +166,13 @@ namespace SFML_Engine
                 }
             }
         }
+
+        /// <summary>
+        /// Close the SFML window
+        /// </summary>
+        public void CloseWindow()
+        {
+            _window.Close();
+        }
     }
 }

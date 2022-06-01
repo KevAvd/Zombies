@@ -20,6 +20,23 @@ namespace SFML_Engine.Mathematics
         }
 
         /// <summary>
+        /// Add only one axis of a vector to another
+        /// </summary>
+        /// <param name="vec"> Vector </param>
+        /// <param name="toAdd"> Vector to add </param>
+        /// <param name="XAxis"> Add only X axis if true </param>
+        /// <returns> Vector sum </returns>
+        public static Vector2f AddOnlyOneAxis(Vector2f vec, Vector2f toAdd, bool XAxis)
+        {
+            if (XAxis)
+            {
+                return new Vector2f(vec.X + toAdd.X, vec.Y);
+            }
+
+            return new Vector2f(vec.X, vec.Y + toAdd.Y);
+        }
+
+        /// <summary>
         /// Keep an angle in degree between 0 and 360
         /// </summary>
         /// <returns> Angle in degree </returns>

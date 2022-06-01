@@ -26,6 +26,6 @@ namespace SFML_Engine.GameObjects.GraphicObjects
         /// <param name="y"> Y position </param>
         /// <param name="w"> Width </param>
         /// <param name="h"> Height </param>
-        public abstract void AddFrame(float x, float y, float w, float h);
+        public abstract void AddSprite(float x, float y, float w, float h);
     }
 }

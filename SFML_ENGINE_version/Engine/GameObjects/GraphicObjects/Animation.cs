@@ -13,7 +13,7 @@ namespace SFML_Engine.GameObjects.GraphicObjects
     internal class Animation : GraphicObject
     {
         //Property
-        List<Vertex> _vertices = new List<Vertex>();        //All vertices (4 by frame)
+        List<Vertex> _vertices = new List<Vertex>();        //All vertices (4 by sprite)
         int _index = 0;                                     //Keep tracks of current frame
         float _timeAcc = 0;                                 //Accumulate time
         float _duration;                                    //Duration of one frame
@@ -53,7 +53,7 @@ namespace SFML_Engine.GameObjects.GraphicObjects
         /// <param name="texCoord2"> Texture coordinates Top-Right </param>
         /// <param name="texCoord3"> Texture coordinates Bottom-Right </param>
         /// <param name="texCoord4"> Texture coordinates Bottom-Left </param>
-        public override void AddFrame(float x, float y, float w, float h)
+        public override void AddSprite(float x, float y, float w, float h)
         {
             _vertices.Add(new Vertex(new Vector2f(-1, -1), new Color(255, 255, 255, 255), new Vector2f(x + 0, y + 0)));
             _vertices.Add(new Vertex(new Vector2f( 1, -1), new Color(255, 255, 255, 255), new Vector2f(x + w, y + 0)));

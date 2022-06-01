@@ -9,6 +9,7 @@ namespace ZombiesGame
     {
         //Character's property
         protected float _health;                          //Health
+        protected float _MaxHealth;                          //Health
         protected float _speed;                           //Speed
         protected Vector2f _velocity;                     //Velocity
         protected Vector2f _movement;                     //Movement
@@ -17,6 +18,11 @@ namespace ZombiesGame
         /// Get/Set health
         /// </summary>
         public float Health { get => _health; set => _health = value; }
+
+        /// <summary>
+        /// Get/Set health
+        /// </summary>
+        public float MaxHealth { get => _MaxHealth; set => _MaxHealth = value; }
 
         /// <summary>
         /// Get/Set speed

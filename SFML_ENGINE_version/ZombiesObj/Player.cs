@@ -13,10 +13,11 @@ namespace ZombiesGame
 {
     class Player : Character
     {
-        //Time
-        float _timeAcc = 0;
-        float _rifleCooldown = 0.100f;
-        float _pistolCooldown = 0.3f;
+        //Time accumulators
+        float _timeAcc_invicibility = 0.0f;
+
+        //Cooldowns
+        const float COOLDOWN_INVICIBILITY = 1.0f;
 
         //Weapon property
         Weapon _weapon;
@@ -43,7 +44,8 @@ namespace ZombiesGame
         {
             NORMAL,
             SPRINTING,
-            RELOADING
+            RELOADING,
+            HITTED
         }
 
         /// <summary>
@@ -84,7 +86,7 @@ namespace ZombiesGame
         /// <summary>
         /// Get player state
         /// </summary>
-        public PlayerState State { get => _playerState;}
+        public PlayerState State { get => _playerState; set => _playerState = value; }
 
         /// <summary>
         /// Constructor
@@ -93,7 +95,10 @@ namespace ZombiesGame
         {
             //Set speed
             _speed = 500;
+
+            //Set health
             _health = 5;
+            _MaxHealth = 5;
 
             //Set AABB
             _physicObject = new AABB(new Vector2f(500, 500), 100, 100);
@@ -105,15 +110,15 @@ namespace ZombiesGame
 
             //Set animations
             _Anim_PistolReload = new Animation(200);
-            _Anim_PistolReload.AddFrame(0, 0, 16, 16);
-            _Anim_PistolReload.AddFrame(0, 16, 16, 16);
-            _Anim_PistolReload.AddFrame(0, 32, 16, 16);
-            _Anim_PistolReload.AddFrame(0, 16, 16, 16);
+            _Anim_PistolReload.AddSprite(0, 0, 16, 16);
+            _Anim_PistolReload.AddSprite(0, 16, 16, 16);
+            _Anim_PistolReload.AddSprite(0, 32, 16, 16);
+            _Anim_PistolReload.AddSprite(0, 16, 16, 16);
             _Anim_RifleReload = new Animation(200);
-            _Anim_RifleReload.AddFrame(16, 0, 16, 16);
-            _Anim_RifleReload.AddFrame(16, 16, 16, 16);
-            _Anim_RifleReload.AddFrame(16, 32, 16, 16);
-            _Anim_RifleReload.AddFrame(16, 16, 16, 16);
+            _Anim_RifleReload.AddSprite(16, 0, 16, 16);
+            _Anim_RifleReload.AddSprite(16, 16, 16, 16);
+            _Anim_RifleReload.AddSprite(16, 32, 16, 16);
+            _Anim_RifleReload.AddSprite(16, 16, 16, 16);
 
             //Set graphic object
             _graphicObject = _Sprite_idle;
@@ -132,8 +137,16 @@ namespace ZombiesGame
 
         public override void OnUpdate()
         {
-            //Update time accumulator
-            _timeAcc += GameTime.DeltaTimeU;
+            if(_playerState == PlayerState.HITTED)
+            {
+                _timeAcc_invicibility += GameTime.DeltaTimeU;
+
+                if(_timeAcc_invicibility >= COOLDOWN_INVICIBILITY)
+                {
+                    _timeAcc_invicibility = 0.0f;
+                    _playerState = PlayerState.NORMAL;
+                }
+            }
 
             //Move player
             _movement = new Vector2f(0, 0);
@@ -157,7 +170,7 @@ namespace ZombiesGame
             {
                 _weapon.Shoot(Mouse.Button.Left);
             }
-            if (Inputs.IsClicked(Keyboard.Key.R) && _weapon.Reload())
+            if (Inputs.IsClicked(Keyboard.Key.R) && _weapon != null && _weapon.Reload())
             {
                 if (_weapon.GetType() == typeof(Pistol)) { _Anim_PistolReload.Restart(); _graphicObject = _Anim_PistolReload; }
                 else { _Anim_RifleReload.Restart(); _graphicObject = _Anim_RifleReload; }
@@ -173,23 +186,6 @@ namespace ZombiesGame
                 else
                 {
                     _graphicObject = _Sprite_Rifle;
-                }
-            }
-
-            //UI
-            if (_weapon != null)
-            {
-                if (_weapon.GetType() == typeof(Pistol))
-                {
-                    Renderer.RenderText($"{_weapon.Ammo} / {_pistolAmmo}", 45, new Vector2f(1300, 990));
-                }
-                else if (_weapon.GetType() == typeof(Rifle))
-                {
-                    Renderer.RenderText($"{_weapon.Ammo} / {_rifleAmmo}", 45, new Vector2f(1300, 990));
-                }
-                else
-                {
-                    Renderer.RenderText($"{_weapon.Ammo} / {_shotgunAmmo}", 45, new Vector2f(1300, 990));
                 }
             }
 

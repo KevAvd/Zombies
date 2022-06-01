@@ -15,16 +15,15 @@ namespace SFML_Engine.Systems
     static class Renderer
     {
         //Vertices
-        static List<Vertex> _Vertices_Quads = new List<Vertex>();           //All quads primitives to render
         static List<Vertex> _Vertices_Quads_Background = new List<Vertex>();//All quads primitives to render on background
+        static List<Vertex> _Vertices_Quads_Layer1 = new List<Vertex>();    //All quads primitives to render (Layer 1)
+        static List<Vertex> _Vertices_Quads_Layer2 = new List<Vertex>();    //All quads primitives to render (Layer 2)
+        static List<Vertex> _Vertices_Quads_Layer3 = new List<Vertex>();    //All quads primitives to render (Layer 3)
+        static List<Vertex> _Vertices_Quads_UI = new List<Vertex>();        //All quads primitives to render (User Interface)
         static List<Vertex> _Vertices_Lines = new List<Vertex>();           //All lines primitives to render
-        static List<Vertex> _Vertices_Triangles = new List<Vertex>();       //All triangles primitives to render
 
         //texts
         static List<Text> _texts = new List<Text>();                        //All text to render
-
-        //Shapes
-        static List<Shape> _shapes = new List<Shape>();                     //All shapes to render
 
         //Rendering
         static RenderStates _rndr_State;                                    //Render state
@@ -80,24 +79,38 @@ namespace SFML_Engine.Systems
             _rndr_Target.Clear(_Color_Backgroud);
 
             //Render background quads
-            if (_Vertices_Quads.Count > 0)
+            if (_Vertices_Quads_Background.Count > 0)
             {
                 _rndr_Target.Draw(_Vertices_Quads_Background.ToArray(), PrimitiveType.Quads, _rndr_State);
                 _Vertices_Quads_Background.Clear();
             }
 
             //Render quads
-            if (_Vertices_Quads.Count > 0)
+            if (_Vertices_Quads_Layer1.Count > 0)
             {
-                _rndr_Target.Draw(_Vertices_Quads.ToArray(), PrimitiveType.Quads, _rndr_State);
-                _Vertices_Quads.Clear();
+                _rndr_Target.Draw(_Vertices_Quads_Layer1.ToArray(), PrimitiveType.Quads, _rndr_State);
+                _Vertices_Quads_Layer1.Clear();
             }
 
-            //Render triangles
-            if (_Vertices_Triangles.Count > 0)
+            //Render quads
+            if (_Vertices_Quads_Layer2.Count > 0)
             {
-                _rndr_Target.Draw(_Vertices_Triangles.ToArray(), PrimitiveType.Triangles, _rndr_State);
-                _Vertices_Triangles.Clear();
+                _rndr_Target.Draw(_Vertices_Quads_Layer2.ToArray(), PrimitiveType.Quads, _rndr_State);
+                _Vertices_Quads_Layer2.Clear();
+            }
+
+            //Render quads
+            if (_Vertices_Quads_Layer3.Count > 0)
+            {
+                _rndr_Target.Draw(_Vertices_Quads_Layer3.ToArray(), PrimitiveType.Quads, _rndr_State);
+                _Vertices_Quads_Layer3.Clear();
+            }
+
+            //Render ui quads
+            if (_Vertices_Quads_UI.Count > 0)
+            {
+                _rndr_Target.Draw(_Vertices_Quads_UI.ToArray(), PrimitiveType.Quads, _rndr_State);
+                _Vertices_Quads_UI.Clear();
             }
 
             //Render lines
@@ -105,16 +118,6 @@ namespace SFML_Engine.Systems
             {
                 _rndr_Target.Draw(_Vertices_Lines.ToArray(), PrimitiveType.Lines);
                 _Vertices_Lines.Clear();
-            }
-
-            //Render shapes
-            if(_shapes.Count > 0)
-            {
-                foreach(Shape shape in _shapes)
-                {
-                    _rndr_Target.Draw(shape);
-                }
-                _shapes.Clear();
             }
 
             //Render texts
@@ -152,24 +155,24 @@ namespace SFML_Engine.Systems
                     position = GameMath.VectorRotation(GameMath.ScaleVector(vertices[i].Position, obj.Scale), obj.Rotation) + obj.Position;
                 }
 
-                if (obj.GraphicObject.State == GraphicState.BACKGROUND)
+                switch (obj.GraphicObject.State)
                 {
-                    //Add vertex
-                    _Vertices_Quads_Background.Add(new Vertex(
-                        position,
-                        vertices[i].Color,
-                        vertices[i].TexCoords
-                    ));
-
-                    continue;
+                    case GraphicState.BACKGROUND:
+                        _Vertices_Quads_Background.Add(new Vertex(position, vertices[i].Color, vertices[i].TexCoords));
+                        break;
+                    case GraphicState.LAYER_1:
+                        _Vertices_Quads_Layer1.Add(new Vertex(position, vertices[i].Color, vertices[i].TexCoords));
+                        break;
+                    case GraphicState.LAYER_2:
+                        _Vertices_Quads_Layer2.Add(new Vertex(position, vertices[i].Color, vertices[i].TexCoords));
+                        break;
+                    case GraphicState.LAYER_3:
+                        _Vertices_Quads_Layer3.Add(new Vertex(position, vertices[i].Color, vertices[i].TexCoords));
+                        break;
+                    case GraphicState.UI:
+                        _Vertices_Quads_UI.Add(new Vertex(position, vertices[i].Color, vertices[i].TexCoords));
+                        break;
                 }
-
-                //Add vertex
-                _Vertices_Quads.Add(new Vertex(
-                    position,
-                    vertices[i].Color,
-                    vertices[i].TexCoords
-                ));
             }
         }
 
@@ -220,15 +223,6 @@ namespace SFML_Engine.Systems
         {
             for (int i = 0; i < ray.Vertices.Length; i++) { ray.Vertices[i].Color = color; }
             _Vertices_Lines.AddRange(ray.Vertices);
-        }
-
-        /// <summary>
-        /// Draw shape
-        /// </summary>
-        /// <param name="shape"> Shape to draw </param>
-        public static void DrawShape(Shape shape)
-        {
-            _shapes.Add(shape);
         }
 
         /// <summary>
