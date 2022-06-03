@@ -69,7 +69,7 @@ namespace SFML_Engine.Systems
             foreach (GameObject obj in gameObjects)
             {
                 if(obj.GraphicObject == null) { continue; }
-                if(obj.GraphicObject.State == GraphicState.HIDDEN) { continue; }
+                if(obj.GraphicState == GraphicState.HIDDEN) { continue; }
                 ObjectSpaceToWorldSpace(obj);
                 if(obj.PhysicObject == null) { continue; }
                 if (RENDER_AABB && obj.PhysicObject.GetType() == typeof(AABB)) { DrawAABB((AABB)obj.PhysicObject, _Color_AABB); }
@@ -155,7 +155,7 @@ namespace SFML_Engine.Systems
                     position = GameMath.VectorRotation(GameMath.ScaleVector(vertices[i].Position, obj.Scale), obj.Rotation) + obj.Position;
                 }
 
-                switch (obj.GraphicObject.State)
+                switch (obj.GraphicState)
                 {
                     case GraphicState.BACKGROUND:
                         _Vertices_Quads_Background.Add(new Vertex(position, vertices[i].Color, vertices[i].TexCoords));

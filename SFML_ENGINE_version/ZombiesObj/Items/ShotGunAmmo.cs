@@ -19,11 +19,8 @@ namespace ZombiesGame
 {
     class ShotgunAmmo : Ammo
     {
-        public ShotgunAmmo(Vector2f pos, int amount, Player p)
+        public ShotgunAmmo(Vector2f pos, int amount)
         {
-            //Set player
-            _player = p;
-
             //Set weapons property
             _amount = amount;
             _type = Weapon.AmmoType.SHOTGUN;
@@ -36,7 +33,7 @@ namespace ZombiesGame
 
             //Set graphic object
             _graphicObject = _sprite_idle;
-            _graphicObject.State = GraphicState.BACKGROUND;
+            _graphicState = GraphicState.BACKGROUND;
 
             //Set transformable
             _transformable.Position = pos;

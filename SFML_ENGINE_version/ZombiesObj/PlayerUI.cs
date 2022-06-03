@@ -36,7 +36,14 @@ namespace ZombiesGame
             //Add heart
             for (int i = 0; i < _player.Health; i++)
             {
-                ui.AddSprite(new Vector2f(i * 100 + 20, 20), new Vector2f(0, 64), new Vector2f(100, 100), new Vector2f(16, 16));
+                if(i > 4)
+                {
+                    ui.AddSprite(new Vector2f(i * 100 + 20, 20), new Vector2f(16, 64), new Vector2f(100, 100), new Vector2f(16, 16));
+                }
+                else
+                {
+                    ui.AddSprite(new Vector2f(i * 100 + 20, 20), new Vector2f(0, 64), new Vector2f(100, 100), new Vector2f(16, 16));
+                }
             }
 
             //Add UI
@@ -64,10 +71,12 @@ namespace ZombiesGame
 
             //Set graphic object
             _graphicObject = ui;
-            _graphicObject.State = SFML_Engine.Enums.GraphicState.UI;
+            _graphicState = SFML_Engine.Enums.GraphicState.UI;
 
             //Set text
             Renderer.RenderText("Ammo:", 42, new Vector2f(1480, 880));
+            Renderer.RenderText("Points:", 42, new Vector2f(800, 880));
+            Renderer.RenderText($"{_player.Points}", 42, new Vector2f(800, 990));
             Renderer.RenderText("Current weapon:", 42, new Vector2f(40, 880));
 
             //Weapon's ammunition

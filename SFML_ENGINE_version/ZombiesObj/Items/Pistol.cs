@@ -13,49 +13,46 @@ using SFML.Audio;
 
 namespace ZombiesGame
 {
-    class Shotgun : Weapon
+    class Pistol : Weapon
     {
         //Sprites
         GameSprite _sprite_idle;
-
-        //Sheesh
-        Ray[] rays = new Ray[5];
 
         /// <summary>
         /// Constructor
         /// </summary>
         /// <param name="pos"> Position </param>
         /// <param name="p"> Ref to player </param>
-        public Shotgun(Vector2f pos, Player p)
+        public Pistol(Vector2f pos, Player p)
         {
             //Set player
             _player = p;
 
-            //Set weapon's property
-            _dammage = 25;
-            _fireRate = 0.5f;
-            _maxammo = 6;
-            _ammo = 6;
+            //Set weapons property
+            _dammage = 20;
+            _fireRate = 0.3f;
+            _maxammo = 7;
+            _ammo = 7;
             _fireMode = FireMode.SEMI_AUTO;
             _weaponState = WeaponState.ONGROUND;
-            _ammoType = AmmoType.SHOTGUN;
-            _shotDistance = 2000;
-            _shotsRay = new Ray[5];
+            _ammoType = AmmoType.PISTOL;
+            _shotDistance = 4000;
+            _shotsRay = new Ray[1];
             _shotSound = new Sound(new SoundBuffer(@"C:\Users\pq34bsi\Desktop\Zombies\Assets\Sounds\GunShot.wav"));
-            _shotOffset = GameMath.ToRadian(10);
+            _shotOffset = 0;
 
             //Set physic object
             _physicObject = new AABB(pos, 50, 50);
 
             //Set muzzle flash
-            _muzzleFlashPosition = new Vector2f(100, -25);
+            _muzzleFlashPosition = new Vector2f(100, 0);
 
             //Set sprites
-            _sprite_idle = new GameSprite(48, 0, 16, 16);
+            _sprite_idle = new GameSprite(32, 0, 16, 16);
 
             //Set graphic object
             _graphicObject = _sprite_idle;
-            _graphicObject.State = GraphicState.BACKGROUND;
+            _graphicState = GraphicState.BACKGROUND;
 
             //Set transformable
             _transformable.Position = pos;

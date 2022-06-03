@@ -55,7 +55,7 @@ namespace ZombiesGame
 
         public override void OnStart()
         {
-
+            base.OnStart();
         }
 
         public override void OnUpdate()
@@ -78,9 +78,10 @@ namespace ZombiesGame
             if(_oldHealth > 0 && _health <= 0)
             {
                 _graphicObject = _sprite_Dead;
-                _graphicObject.State = GraphicState.BACKGROUND;
+                _graphicState = GraphicState.LAYER_1;
                 _transformable.Scale = new Vector2f(100, 50);
                 _dead = true;
+                _player.Points += 100;
                 DropItem();
             }
 
@@ -106,9 +107,9 @@ namespace ZombiesGame
             {
                 switch (_rnd.Next(3))
                 {
-                    case 0: GetGameState().AddGameObj(new PistolAmmo(Position, _rnd.Next(20,50), _player)); break;
-                    case 1: GetGameState().AddGameObj(new RifleAmmo(Position, _rnd.Next(30,60), _player)); break;
-                    case 2: GetGameState().AddGameObj(new ShotgunAmmo(Position, _rnd.Next(6,10), _player)); break;
+                    case 0: GetGameState().AddGameObj(new PistolAmmo(Position, _rnd.Next(20,50))); break;
+                    case 1: GetGameState().AddGameObj(new RifleAmmo(Position, _rnd.Next(30,60))); break;
+                    case 2: GetGameState().AddGameObj(new ShotgunAmmo(Position, _rnd.Next(6,10))); break;
                 }
             }
 

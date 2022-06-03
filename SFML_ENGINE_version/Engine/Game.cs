@@ -1,8 +1,10 @@
 ﻿using SFML.Graphics;
 using SFML.Window;
 using SFML_Engine.Systems;
+using SFML_Engine.Enums;
 using SFML_Engine.GameObjects;
 using SFML_Engine.GameObjects.GraphicObjects;
+using SFML_Engine.GameObjects.PhysicObjects;
 using System.Reflection;
 using System.Collections.Generic;
 using System;
@@ -72,12 +74,6 @@ namespace SFML_Engine
             //Start clock
             GameTime.StartClock();
 
-            //Play start script of all script object
-            foreach(ScriptObject sobj in _state.Objects)
-            {
-                sobj.OnStart();
-            }
-
             //GameLoop
             while (_window.IsOpen)
             {
@@ -111,6 +107,9 @@ namespace SFML_Engine
 
                     //Update state
                     _state.OnUpdate();
+
+                    //Handle Collision
+
 
                     //Update per second
                     ups++;
@@ -173,6 +172,58 @@ namespace SFML_Engine
         public void CloseWindow()
         {
             _window.Close();
+        }
+
+        private void DetectCollision()
+        {
+            foreach(GameObject obj in _state.Objects)
+            {
+                if(obj.PhysicObject.GetType() == typeof(AABB))
+                {
+
+                }
+
+                if (obj.PhysicObject.GetType() == typeof(Ray))
+                {
+
+                }
+
+                if (obj.PhysicObject.GetType() == typeof(Circle))
+                {
+
+                }
+            }
+        }
+
+        void DetectAABBCollisionWith(GameObject obj)
+        {
+            if(obj.PhysicState == PhysicState.NOCLIP)
+            {
+                return;
+            }
+
+            foreach (GameObject obj2 in _state.Objects)
+            {
+                if (obj2.PhysicState == PhysicState.NOCLIP || obj2 == obj)
+                {
+                    continue;
+                }
+
+                if (obj2.PhysicObject.GetType() == typeof(AABB))
+                {
+                    
+                }
+
+                if (obj2.PhysicObject.GetType() == typeof(Ray))
+                {
+
+                }
+
+                if (obj2.PhysicObject.GetType() == typeof(Circle))
+                {
+
+                }
+            }
         }
     }
 }

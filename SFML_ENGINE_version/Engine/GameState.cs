@@ -59,6 +59,10 @@ namespace SFML_Engine
         public void AddGameObj(GameObject obj)
         {
             obj.SetGameState(this);
+            if(obj.GetType() == typeof(ScriptObject) || obj.GetType().IsSubclassOf(typeof(ScriptObject)))
+            {
+                (obj as ScriptObject).OnStart();
+            }
             _gameObjects.Add(obj);
         }
     }

@@ -62,7 +62,7 @@ namespace ZombiesGame
 
         public override void OnStart()
         {
-
+            _graphicState = GraphicState.LAYER_2;
         }
 
         public override void OnUpdate()
@@ -92,7 +92,7 @@ namespace ZombiesGame
                         }
                         _player.Weapon = this;
                         _weaponState = WeaponState.ONPLAYER;
-                        _graphicObject.State = GraphicState.HIDDEN;
+                        _graphicState = GraphicState.HIDDEN;
                         _physicObject.State = PhysicState.NOCLIP;
                     }
                     break;

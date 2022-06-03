@@ -27,6 +27,9 @@ namespace ZombiesGame
         int _rifleAmmo = 0;
         int _shotgunAmmo = 0;
 
+        //Points
+        int _points = 0;
+
         //Sprites
         GameSprite _Sprite_Pistol;
         GameSprite _Sprite_idle;
@@ -89,6 +92,11 @@ namespace ZombiesGame
         public PlayerState State { get => _playerState; set => _playerState = value; }
 
         /// <summary>
+        /// Get/Set player's points
+        /// </summary>
+        public int Points { get => _points; set => _points = value; }
+
+        /// <summary>
         /// Constructor
         /// </summary>
         public Player()
@@ -132,7 +140,7 @@ namespace ZombiesGame
 
         public override void OnStart()
         {
-
+            base.OnStart();
         }
 
         public override void OnUpdate()

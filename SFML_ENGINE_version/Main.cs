@@ -23,6 +23,7 @@ namespace ZombiesGame
         {
             Renderer.MainFont = new Font(@"C:\Users\pq34bsi\Desktop\Zombies\Assets\Fonts\prstartk.ttf");
             AddGameObj(player);
+            AddGameObj(new LifeBonus(new Vector2f(50, 540)));
             AddGameObj(new PlayerUI(player));
             AddGameObj(new Pistol(new Vector2f(960, 540), player));
         }

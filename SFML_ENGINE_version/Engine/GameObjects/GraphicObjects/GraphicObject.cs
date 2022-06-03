@@ -5,14 +5,6 @@ namespace SFML_Engine.GameObjects.GraphicObjects
 {
     abstract class GraphicObject
     {
-        //State
-        GraphicState _grphState;
-
-        /// <summary>
-        /// Get/Set graphic state
-        /// </summary>
-        public GraphicState State { get => _grphState; set => _grphState = value; } 
-
         /// <summary>
         /// Get vertices of graphic object
         /// </summary>

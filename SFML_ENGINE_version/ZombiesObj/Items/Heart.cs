@@ -41,7 +41,7 @@ namespace ZombiesGame
 
             //Set graphic object
             _graphicObject = _sprite_idle;
-            _graphicObject.State = GraphicState.BACKGROUND;
+            _graphicState = GraphicState.LAYER_2;
 
             //Set transformable
             _transformable.Position = pos;

@@ -39,7 +39,10 @@ namespace ZombiesGame
         /// </summary>
         public Vector2f Movement { get => _movement; set => _movement = value; }
 
-        public override abstract void OnStart();
+        public override void OnStart()
+        {
+            _graphicState = SFML_Engine.Enums.GraphicState.LAYER_3;
+        }
 
         public override void OnUpdate()
         {

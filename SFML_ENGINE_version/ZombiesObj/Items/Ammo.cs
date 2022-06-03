@@ -26,11 +26,13 @@ namespace ZombiesGame
 
         public override void OnStart()
         {
-            foreach(GameObject obj in GetGameState().Objects)
+            _graphicState = GraphicState.LAYER_2;
+            foreach (GameObject obj in GetGameState().Objects)
             {
-                if(obj.GetType() == typeof(Player))
+                if (obj.GetType() == typeof(Player))
                 {
                     _player = obj as Player;
+                    break;
                 }
             }
         }

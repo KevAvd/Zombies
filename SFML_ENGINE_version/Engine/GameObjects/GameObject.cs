@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using SFML_Engine.GameObjects.PhysicObjects;
 using SFML_Engine.GameObjects.GraphicObjects;
+using SFML_Engine.Enums;
 using SFML.System;
 using SFML.Graphics;
 
@@ -17,6 +18,8 @@ namespace SFML_Engine.GameObjects
         protected GraphicObject _graphicObject;                           //Vertices
         protected Transformable _transformable = new Transformable();     //Transformable
         protected GameObject _relative;                                   //Relative game object
+        protected GraphicState _graphicState = GraphicState.LAYER_1;      //Graphic state of the object
+        protected PhysicState _physicState = PhysicState.NOCLIP;          //Physic state of the object
         GameState _state;                                                 //Game state container
         bool _destroyed = false;                                          //Indicates if an object is destroyed
         bool _IsRelative = false;                                         //Indicates if an object transfromable is relative to another one
@@ -35,6 +38,16 @@ namespace SFML_Engine.GameObjects
         /// Get/Set transformable
         /// </summary>
         public Transformable Transformable { get => _transformable; set => _transformable = value; }
+
+        /// <summary>
+        /// Get/Set graphic state
+        /// </summary>
+        public GraphicState GraphicState { get => _graphicState; set => _graphicState = value; }
+
+        /// <summary>
+        /// Get/Set physic state
+        /// </summary>
+        public PhysicState PhysicState { get => _physicState; set => _physicState = value; }
 
         /// <summary>
         /// Get/Set relative object

@@ -17,26 +17,23 @@ using SFML.Audio;
 
 namespace ZombiesGame
 {
-    class RifleAmmo : Ammo
+    class PistolAmmo : Ammo
     {
-        public RifleAmmo(Vector2f pos, int amount, Player p)
+        public PistolAmmo(Vector2f pos, int amount)
         {
-            //Set player
-            _player = p;
-
-            //Set ammo property
+            //Set weapons property
             _amount = amount;
-            _type = Weapon.AmmoType.RIFLE;
+            _type = Weapon.AmmoType.PISTOL;
 
             //Set physic object
             _physicObject = new AABB(pos, 50, 50);
 
             //Set sprites
-            _sprite_idle = new GameSprite(48, 32, 16, 16);
+            _sprite_idle = new GameSprite(64, 48, 16, 16);
 
             //Set graphic object
             _graphicObject = _sprite_idle;
-            _graphicObject.State = GraphicState.BACKGROUND;
+            _graphicState = GraphicState.BACKGROUND;
 
             //Set transformable
             _transformable.Position = pos;
