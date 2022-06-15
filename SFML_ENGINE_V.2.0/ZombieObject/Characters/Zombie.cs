@@ -14,12 +14,14 @@ namespace ZombiesGame
         ZombieState _nextState;                  //Next state of the zombie
         bool _isSwitching = false;               //Indicate if zombie is switching state   
 
+        //Reference to player
+        Player _player;
+
         //State properties
-        Vector2f _objectif;                      //Position that zombie need to reach
-        bool _hasObjectif = false;               //Indicate if zombie has an objectif to reach
+        float _angVel = GameMath.ToRadian(90);   //Angular velocity of zombie
 
         //Time accumulators
-        float _timeAcc;
+        float _deadAcc;                          //Accumulate time
 
         //Constante
         const float NORMAL_SPEED = 250;
@@ -37,8 +39,12 @@ namespace ZombiesGame
         /// Constructor
         /// </summary>
         /// <param name="pos"> Zombie position </param>
-        public Zombie(Vector2f pos)
+        /// <param name="player"> Player </param>
+        public Zombie(Vector2f pos, Player player)
         {
+            //Get reference to player
+            _player = player;
+
             //Set character properties
             _health = 150;
             _MaxHealth = 150;
@@ -92,6 +98,12 @@ namespace ZombiesGame
                 case ZombieState.DEAD: DEAD_STATE(); break;
             }
 
+            //Check if zombie is dead and change state accordingly
+            if (_state != ZombieState.DEAD && _health <= 0)
+            {
+                SwitchState(ZombieState.DEAD);
+            }
+
             //Base methode
             base.OnUpdate();
         }
@@ -109,25 +121,14 @@ namespace ZombiesGame
         /// </summary>
         void NORMAL_STATE()
         {
-            //Get an objectif to reach if there's none
-            if (!_hasObjectif)
-            {
-                do
-                {
-                    _objectif = GameMath.RandomPointInCircle(Position, 200, true);
-                } while (_objectif.X > 1920 || _objectif.X < 0 || _objectif.Y > 1080 || _objectif.Y < 0);
-                _hasObjectif = true;
-            }
-
-            //Make zombie follow the objectif
+            //Make zombie walk in circle
             GoForward();
+            Rotation += _angVel * GameTime.DeltaTimeU;
 
-            Renderer.DrawCircle(new Circle(_objectif, 10), Color.Red, 20);
-
-            //Verify if zombie has reach the objectif
-            if(GameMath.GetVectorLength(_objectif - Position) < 1)
+            //Start chasing player if close enough
+            if(GameMath.GetVectorLength(_player.Position - Position) < 500)
             {
-                _hasObjectif = false;
+                SwitchState(ZombieState.CHASING);
             }
         }
         /// <summary>
@@ -140,27 +141,44 @@ namespace ZombiesGame
         /// <summary>
         /// Zombie chasing behavior
         /// </summary>
-        void CHASING_STATE() { }
+        void CHASING_STATE()
+        {
+            Follow(_player.Position);
+            AimAt(_player.Position);
+
+            //Stop chasing player if too far
+            if (GameMath.GetVectorLength(_player.Position - Position) > 500)
+            {
+                SwitchState(ZombieState.NORMAL);
+            }
+        }
         /// <summary>
         /// Setup dead state
         /// </summary>
         void SET_DEAD_STATE()
         {
-            _timeAcc = 0;
+            _deadAcc = 0;
+            _graphicHandler.SetDefaultSprite("Dead");
+            _graphicHandler.SetDefaultSpriteToCurrent();
+            Scale = new Vector2f(100, 50);
+            _physicObject.State = PhysicState.NOCLIP;
+            _velocity = new Vector2f(0, 0);
+            _movement = new Vector2f(0, 0);
         }
         /// <summary>
         /// Zombie dead behavior
         /// </summary>
         void DEAD_STATE()
         {
-            _timeAcc += GameTime.DeltaTimeU;
+            _deadAcc += GameTime.DeltaTimeU;
 
-            if(_timeAcc >= DEAD_DESTROY_TIME)
+            if(_deadAcc >= DEAD_DESTROY_TIME)
             {
                 Destroy();
             }
         }
         #endregion
+
         #region ZombieFeatures
         /// <summary>
         /// Make the zombie got to a position
@@ -170,6 +188,9 @@ namespace ZombiesGame
             _movement = pos - Position;
         }
 
+        /// <summary>
+        /// Make the zombie go forward
+        /// </summary>
         void GoForward()
         {
             _movement = GameMath.GetUnitVectorFromAngle(Rotation);

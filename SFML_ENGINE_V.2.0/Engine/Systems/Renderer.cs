@@ -64,7 +64,8 @@ namespace SFML_Engine
             //Set vertices position to world space
             foreach (GameObject obj in gameObjects)
             {
-                if (RENDER_PHYSOBJ && obj.PhysicObject != null) { RenderPhysicObject(obj.PhysicObject); }
+                if (RENDER_PHYSOBJ && obj.PhysicObject != null)
+                { RenderPhysicObject(obj.PhysicObject); }
                 if(obj.GraphicHandler.CurrentGrphObj == null || obj.GraphicHandler.GraphicState == GraphicState.HIDDEN) { continue; }
                 RenderObject(obj);
             }
@@ -138,7 +139,7 @@ namespace SFML_Engine
             {
                 if (obj.IsRelative())
                 {
-                    position = GameMath.VectorRotation(GameMath.ScaleVector(vertices[i].Position, obj.Scale), obj.Rotation) + obj.RelativePosition;
+                    position = GameMath.VectorRotation(GameMath.ScaleVector(vertices[i].Position, obj.Scale), obj.Rotation + obj.Relative.Rotation) + obj.RelativePosition;
                 }
                 else
                 {
@@ -197,6 +198,20 @@ namespace SFML_Engine
 
             _texts.Add(new Text(txt, MainFont, charSize));
             _texts.Last().Position = pos;
+        }
+
+        /// <summary>
+        /// Render text to screen
+        /// </summary>
+        /// <param name="txt"> Text to render </param>
+        public static void RenderText(Text txt)
+        {
+            if (_mainFont == null)
+            {
+                return;
+            }
+
+            _texts.Add(txt);
         }
 
         /// <summary>

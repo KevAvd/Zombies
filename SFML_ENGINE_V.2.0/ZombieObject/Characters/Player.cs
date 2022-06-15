@@ -13,17 +13,30 @@ namespace ZombiesGame
         PlayerState _state = PlayerState.NORMAL;  //Current state of the player
         PlayerState _nextState;                   //Next state of the player
         bool _isSwitching = false;                //Indicate if player is switching state
+        Weapon _weapon;                           //Player's weapon
+
+        //Inventory
+        int _pistolBullet = 100;
+        int _RifleBullet = 100;
+        int _Shell = 100;
+        int _money = 0;
+        bool _speedBonus = false;
+        bool _lifeBonus = false;
 
         //Constant
         const float NORMAL_SPEED = 800;
         const float SLOW_SPEED = 400;
+
+        public int PistolBullet { get => _pistolBullet; set => _pistolBullet = value; }
+        public int RifleBullet { get => _RifleBullet; set => _RifleBullet = value; }
+        public int Shell { get => _Shell; set => _Shell = value; }
+        public int Money { get => _money; set => _money = value; }
 
         //enum
         enum PlayerState
         {
             NORMAL,
             RELOADING,
-            SHOOTING
         }
 
         /// <summary>
@@ -32,8 +45,8 @@ namespace ZombiesGame
         public Player(Vector2f pos)
         {
             //Set character properties
-            _health = 5;
-            _MaxHealth = 5;
+            _health = 3;
+            _MaxHealth = 3;
 
             //Set graphic handler
             Animation anim1 = new Animation(200);
@@ -45,11 +58,11 @@ namespace ZombiesGame
             anim2.AddSprite(16, 16, 16, 16);
             anim2.AddSprite(16, 32, 16, 16);
             _graphicHandler.AddGraphicObject("Idle", new GameSprite(48, 48, 16, 16));
-            _graphicHandler.AddGraphicObject("Pistol_Idle", new GameSprite(48, 48, 16, 16));
-            _graphicHandler.AddGraphicObject("Rifle_Idle", new GameSprite(48, 48, 16, 16));
+            _graphicHandler.AddGraphicObject("Pistol_Idle", new GameSprite(0, 0, 16, 16));
+            _graphicHandler.AddGraphicObject("Rifle_Idle", new GameSprite(16, 0, 16, 16));
             _graphicHandler.AddGraphicObject("Pistol_Reload", anim1);
             _graphicHandler.AddGraphicObject("Rifle_Reload", anim2);
-            _graphicHandler.SetDefaultSprite("Idle");
+            _graphicHandler.SetDefaultSprite("Pistol_Idle");
 
             //Set physic object
             _physicObject = new AABB(pos, 100, 100);
@@ -68,6 +81,10 @@ namespace ZombiesGame
 
             //Base methode
             base.OnStart();
+
+            Pistol pistol = new Pistol();
+            GameState.AddGameObj(pistol);
+            _weapon = pistol;
         }
 
         public override void OnUpdate()
@@ -86,7 +103,6 @@ namespace ZombiesGame
                 {
                     case PlayerState.NORMAL: SET_NORMAL_STATE(); break;
                     case PlayerState.RELOADING: SET_RELOADING_STATE(); break;
-                    case PlayerState.SHOOTING: SET_SHOOTING_STATE(); break;
                 }
             }
 
@@ -95,7 +111,6 @@ namespace ZombiesGame
             {
                 case PlayerState.NORMAL: NORMAL_STATE(); break;
                 case PlayerState.RELOADING: RELOADING_STATE(); break;
-                case PlayerState.SHOOTING: SHOOTING_STATE(); break;
             }
 
             //Base methode
@@ -118,6 +133,11 @@ namespace ZombiesGame
         {
             Move();
             AimAtMouse();
+            _weapon.Shoot(this);
+            if(Inputs.IsClicked(Keyboard.Key.R) && _weapon.Reload(this))
+            {
+                SwitchState(PlayerState.RELOADING);
+            }
         }
 
         /// <summary>
@@ -126,6 +146,14 @@ namespace ZombiesGame
         void SET_RELOADING_STATE()
         {
             _speed = SLOW_SPEED;
+            if(_weapon.GetType() == typeof(Pistol))
+            {
+                _graphicHandler.PlayAnimation("Pistol_Reload", 1, AnimationType.LOOP);
+            }
+            else
+            {
+                _graphicHandler.PlayAnimation("Rifle_Reload", 1, AnimationType.LOOP);
+            }
         }
 
         /// <summary>
@@ -135,23 +163,10 @@ namespace ZombiesGame
         {
             Move();
             AimAtMouse();
-        }
-
-        /// <summary>
-        /// Setup shooting state
-        /// </summary>
-        void SET_SHOOTING_STATE()
-        {
-            _speed = SLOW_SPEED;
-        }
-
-        /// <summary>
-        /// Player behavior when shooting
-        /// </summary>
-        void SHOOTING_STATE()
-        {
-            Move();
-            AimAtMouse();
+            if(_graphicHandler.CurrentGrphObj.GetType() == typeof(GameSprite))
+            {
+                SwitchState(PlayerState.NORMAL);
+            }
         }
         #endregion
 
@@ -187,7 +202,26 @@ namespace ZombiesGame
             Vector2f mousePos = Inputs.GetMousePosition(true);
             Rotation = MathF.Atan2(mousePos.Y - Position.Y, mousePos.X - Position.X);
         }
-        #endregion
+
+        /// <summary>
+        /// Switch weapon
+        /// </summary>
+        /// <param name="toSwitch"> Weapon to switch to </param>
+        void SwitchWeapon(Weapon toSwitch)
+        {
+            _weapon = toSwitch;
+
+            if (_weapon.GetType() == typeof(Pistol))
+            {
+                _graphicHandler.SetDefaultSprite("Pistol_Idle");
+                _graphicHandler.SetDefaultSpriteToCurrent();
+            }
+            else
+            {
+                _graphicHandler.SetDefaultSprite("Rifle_Idle");
+                _graphicHandler.SetDefaultSpriteToCurrent();
+            }
+        }
 
         /// <summary>
         /// Switch state
@@ -198,5 +232,6 @@ namespace ZombiesGame
             _nextState = toSwitch;
             _isSwitching = true;
         }
+        #endregion
     }
 }

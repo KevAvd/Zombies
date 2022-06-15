@@ -18,10 +18,9 @@ namespace SFML_Engine
         public GameObject[] Objects { get => _gameObjects.ToArray(); }
 
         /// <summary>
-        /// Get all game objects
+        /// Get all collisions
         /// </summary>
         public Collision[] Collisions { get => _collisions.ToArray(); }
-
 
         /// <summary>
         /// Get/Set name

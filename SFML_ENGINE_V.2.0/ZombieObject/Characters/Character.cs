@@ -47,6 +47,11 @@ namespace ZombiesGame
 
         public override void OnUpdate()
         {
+            if(_speed == 400)
+            {
+
+            }
+
             //Move character
             Position += GameMath.NormalizeVector(_movement) * _speed * GameTime.DeltaTimeU;
 
