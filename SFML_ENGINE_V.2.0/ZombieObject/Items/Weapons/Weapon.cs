@@ -44,6 +44,7 @@ namespace ZombiesGame
         /// Get max ammo
         /// </summary>
         public int MaxAmmo { get => _maxammo; }
+        public int Ammo { get => _ammo; }
 
         /// <summary>
         /// Make the weapon shoot

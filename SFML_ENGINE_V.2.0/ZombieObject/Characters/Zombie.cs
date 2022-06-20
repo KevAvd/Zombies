@@ -160,10 +160,12 @@ namespace ZombiesGame
             _deadAcc = 0;
             _graphicHandler.SetDefaultSprite("Dead");
             _graphicHandler.SetDefaultSpriteToCurrent();
+            _graphicHandler.GraphicState = GraphicState.LAYER_1;
             Scale = new Vector2f(100, 50);
             _physicObject.State = PhysicState.NOCLIP;
             _velocity = new Vector2f(0, 0);
             _movement = new Vector2f(0, 0);
+            _player.Money += 100;
         }
         /// <summary>
         /// Zombie dead behavior

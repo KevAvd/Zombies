@@ -8,9 +8,10 @@ namespace SFML_Engine
     {
         Dictionary<string, GraphicObject> _graphicObj = new Dictionary<string, GraphicObject>(); //Contains all graphic objects
         GraphicObject _currentGrphObj;                                                           //Current displayed graphic object
-        GameSprite _defaultSprite;                                                               //Default sprite (Becomes current graphic objet after end of animation)
+        GraphicObject _defaultGrphObj;                                                           //Default sprite (Becomes current graphic objet after end of animation)
         int _animationCount;                                                                     //Number of time to play animation
         GraphicState _graphicState = GraphicState.LAYER_1;                                       //Graphic state
+        Frame _frame = new Frame();                                                              //Contains a frame
 
         /// <summary>
         /// Get current graphic object
@@ -20,12 +21,17 @@ namespace SFML_Engine
         /// <summary>
         /// Get default sprite
         /// </summary>
-        public GameSprite DefaultSprite { get => _defaultSprite; }
+        public GraphicObject DefaultGrphObj { get => _defaultGrphObj; }
 
         /// <summary>
         /// Get/Set graphic state
         /// </summary>
-        internal GraphicState GraphicState { get => _graphicState; set => _graphicState = value; }
+        public GraphicState GraphicState { get => _graphicState; set => _graphicState = value; }
+
+        /// <summary>
+        /// Get/Set frame
+        /// </summary>
+        public Frame Frame { get => _frame; set => _frame = value; }
 
         /// <summary>
         /// Add a graphic object
@@ -70,6 +76,21 @@ namespace SFML_Engine
         }
 
         /// <summary>
+        /// Try get graphic object
+        /// </summary>
+        /// <param name="name"> Name of the graphic object </param>
+        /// <param name="obj"> Graphic object </param>
+        /// <returns> True if a graphic object has been found </returns>
+        public bool GetGraphicObject(string name, out GraphicObject obj)
+        {
+            if(_graphicObj.TryGetValue(name, out obj))
+            {
+                return true;
+            }
+
+            return false;
+        }
+        /// <summary>
         /// Set the default sprite
         /// </summary>
         /// <param name="name"> Name (key) </param>
@@ -78,11 +99,20 @@ namespace SFML_Engine
         {
             if (_graphicObj.TryGetValue(name, out GraphicObject value) && value.GetType() == typeof(GameSprite))
             {
-                _defaultSprite = value as GameSprite;
+                _defaultGrphObj = value as GameSprite;
                 return true;
             }
 
             return false;
+        }
+
+        /// <summary>
+        /// Set frame as current graphic object 
+        /// </summary>
+        public void SetFrameAsCurrent()
+        {
+            _currentGrphObj = _frame;
+            _defaultGrphObj = _frame;
         }
 
         /// <summary>
@@ -101,9 +131,9 @@ namespace SFML_Engine
         /// </summary>
         public void SetDefaultSpriteToCurrent()
         {
-            if(_defaultSprite != null)
+            if(_defaultGrphObj != null)
             {
-                _currentGrphObj = _defaultSprite;
+                _currentGrphObj = _defaultGrphObj;
             }
         }
     }

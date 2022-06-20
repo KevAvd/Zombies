@@ -26,17 +26,26 @@ namespace ZombiesGame
         //Constant
         const float NORMAL_SPEED = 800;
         const float SLOW_SPEED = 400;
+        const float HITTED_DURATION = 2;
+
+        //Time accumulators
+        float _hittedAcc = 0;
 
         public int PistolBullet { get => _pistolBullet; set => _pistolBullet = value; }
         public int RifleBullet { get => _RifleBullet; set => _RifleBullet = value; }
         public int Shell { get => _Shell; set => _Shell = value; }
         public int Money { get => _money; set => _money = value; }
+        public PlayerState State { get => _state; }
+        public Weapon Weapon { get => _weapon; set => _weapon = value; }
+        public bool IsSwitching { get => _isSwitching; }
+        internal PlayerState NextState { get => _nextState; }
 
         //enum
-        enum PlayerState
+        public enum PlayerState
         {
             NORMAL,
             RELOADING,
+            HITTED,
         }
 
         /// <summary>
@@ -103,6 +112,7 @@ namespace ZombiesGame
                 {
                     case PlayerState.NORMAL: SET_NORMAL_STATE(); break;
                     case PlayerState.RELOADING: SET_RELOADING_STATE(); break;
+                    case PlayerState.HITTED: SET_HITTED_STATE(); break;
                 }
             }
 
@@ -111,6 +121,7 @@ namespace ZombiesGame
             {
                 case PlayerState.NORMAL: NORMAL_STATE(); break;
                 case PlayerState.RELOADING: RELOADING_STATE(); break;
+                case PlayerState.HITTED: HITTED_STATE(); break;
             }
 
             //Base methode
@@ -123,6 +134,7 @@ namespace ZombiesGame
         /// </summary>
         void SET_NORMAL_STATE()
         {
+            _graphicHandler.GraphicState = GraphicState.LAYER_3;
             _speed = NORMAL_SPEED;
         }
 
@@ -146,7 +158,8 @@ namespace ZombiesGame
         void SET_RELOADING_STATE()
         {
             _speed = SLOW_SPEED;
-            if(_weapon.GetType() == typeof(Pistol))
+            _graphicHandler.GraphicState = GraphicState.LAYER_3;
+            if (_weapon.GetType() == typeof(Pistol))
             {
                 _graphicHandler.PlayAnimation("Pistol_Reload", 1, AnimationType.LOOP);
             }
@@ -164,6 +177,36 @@ namespace ZombiesGame
             Move();
             AimAtMouse();
             if(_graphicHandler.CurrentGrphObj.GetType() == typeof(GameSprite))
+            {
+                SwitchState(PlayerState.NORMAL);
+            }
+        }
+
+        /// <summary>
+        /// Setup hitted state
+        /// </summary>
+        void SET_HITTED_STATE()
+        {
+            _speed = NORMAL_SPEED;
+            _hittedAcc = 0;
+        }
+
+        /// <summary>
+        /// Player hitted behavior
+        /// </summary>
+        void HITTED_STATE()
+        {
+            Move();
+            AimAtMouse();
+            _weapon.Shoot(this);
+            _hittedAcc += GameTime.DeltaTimeU;
+            _graphicHandler.GraphicState = _graphicHandler.GraphicState == GraphicState.LAYER_3 ? GraphicState.HIDDEN : GraphicState.LAYER_3;
+            if (Inputs.IsClicked(Keyboard.Key.R) && _weapon.Reload(this))
+            {
+                SwitchState(PlayerState.RELOADING);
+            }
+
+            if(_hittedAcc >= HITTED_DURATION)
             {
                 SwitchState(PlayerState.NORMAL);
             }
@@ -227,7 +270,7 @@ namespace ZombiesGame
         /// Switch state
         /// </summary>
         /// <param name="toSwitch"> State to switch to </param>
-        void SwitchState(PlayerState toSwitch)
+        public void SwitchState(PlayerState toSwitch)
         {
             _nextState = toSwitch;
             _isSwitching = true;

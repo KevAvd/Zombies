@@ -18,6 +18,11 @@ namespace SFML_Engine
         bool _changingState = false;                        //Indicate if the state is changing
 
         /// <summary>
+        /// Get window
+        /// </summary>
+        public RenderWindow Window { get => _window; }
+
+        /// <summary>
         /// Constructor
         /// </summary>
         public Game(string title)
@@ -190,5 +195,16 @@ namespace SFML_Engine
         {
             _window.Close();
         }
+
+        /// <summary>
+        /// Set windows view
+        /// </summary>
+        /// <param name="view"> View to set </param>
+        public void SetView(View view)
+        {
+            _window.SetView(view);
+        }
+
+
     }
 }

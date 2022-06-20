@@ -189,7 +189,8 @@ namespace SFML_Engine
         {   
             if (relative)
             {
-                return (Vector2f)Mouse.GetPosition(_window);
+                return _window.MapPixelToCoords(Mouse.GetPosition(_window));
+                
             }
             else
             {
