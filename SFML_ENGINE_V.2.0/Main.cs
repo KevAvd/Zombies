@@ -13,44 +13,40 @@ namespace ZombiesGame
         Player _player = new Player(new Vector2f(1920 / 2, 1080 / 2));
         byte[,] mapbyte =
         {
-            {2,2,2,2,2,2,2,2,2,2,0,0,0,0,0,0,0,0,0,0 },
-            {2,1,1,1,1,1,1,1,1,2,0,0,0,0,0,0,0,0,0,0 },
-            {2,1,1,1,1,1,1,1,1,2,0,0,0,0,0,0,2,2,2,2 },
-            {2,1,1,1,1,1,1,1,1,2,0,0,0,0,0,0,2,1,1,2 },
-            {2,1,1,1,1,1,1,1,1,2,0,0,0,0,0,0,2,1,1,2 },
-            {2,1,1,1,1,1,1,1,1,2,2,2,2,2,2,2,2,2,3,2 },
-            {2,1,1,1,1,1,1,1,1,2,1,1,1,1,1,1,1,1,1,2 },
-            {2,1,1,1,1,1,1,1,1,3,1,1,1,1,1,1,1,1,1,2 },
-            {2,1,1,1,1,1,1,1,1,2,1,1,1,1,1,1,1,1,1,2 },
-            {2,1,1,1,1,1,1,1,1,2,1,1,1,1,1,1,1,1,1,2 },
-            {2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2 }
+            {4,4,4,4,4,4,4,4,4,4,0,0,0,0,0,0,0,0,0,0 },
+            {4,1,1,1,1,1,1,1,1,4,0,0,0,0,0,0,0,0,0,0 },
+            {4,1,1,1,1,1,1,1,1,4,0,0,0,0,0,0,4,4,4,4 },
+            {4,6,1,1,1,1,1,1,1,4,0,0,0,0,0,0,4,1,1,4 },
+            {4,5,1,1,1,1,1,1,1,4,0,0,0,0,0,0,4,1,1,4 },
+            {4,1,1,1,1,1,1,1,1,4,4,4,4,4,4,4,4,4,3,4 },
+            {4,1,1,1,1,1,1,1,1,4,1,1,1,1,1,1,1,1,1,4 },
+            {4,1,1,1,1,1,1,1,1,2,1,1,1,1,1,1,1,1,1,4 },
+            {4,1,1,1,1,1,1,1,1,4,1,1,1,1,1,1,1,1,1,4 },
+            {4,7,1,8,1,9,1,1,1,4,1,1,1,1,1,1,1,1,1,4 },
+            {4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4 }
         };
         Map map;
         
         //Constant
         const float MAX_CAMPLAYER_DISTANCE = 200;
 
-        /// <summary>
-        /// Get player
-        /// </summary>
-        public Player Player { get => _player; }
-
         public override void OnStart()
         {
-            map = new Map(mapbyte);
+            map = new Map(mapbyte, _player);
             AddGameObj(_player);
-            AddGameObj(new Zombie(new Vector2f(300, 300), _player));
-            AddGameObj(new Zombie(new Vector2f(400, 300), _player));
-            AddGameObj(new Zombie(new Vector2f(500, 300), _player));
-            AddGameObj(new Zombie(new Vector2f(600, 300), _player));
-            AddGameObj(new Zombie(new Vector2f(700, 300), _player));
-            AddGameObj(new Zombie(new Vector2f(300, 400), _player));
-            AddGameObj(new Zombie(new Vector2f(400, 400), _player));
-            AddGameObj(new Zombie(new Vector2f(500, 400), _player));
-            AddGameObj(new Zombie(new Vector2f(600, 400), _player));
-            AddGameObj(new Zombie(new Vector2f(700, 400), _player));
+            //AddGameObj(new Zombie(new Vector2f(300, 300), _player));
+            //AddGameObj(new Zombie(new Vector2f(400, 300), _player));
+            //AddGameObj(new Zombie(new Vector2f(500, 300), _player));
+            //AddGameObj(new Zombie(new Vector2f(600, 300), _player));
+            //AddGameObj(new Zombie(new Vector2f(700, 300), _player));
+            //AddGameObj(new Zombie(new Vector2f(300, 400), _player));
+            //AddGameObj(new Zombie(new Vector2f(400, 400), _player));
+            //AddGameObj(new Zombie(new Vector2f(500, 400), _player));
+            //AddGameObj(new Zombie(new Vector2f(600, 400), _player));
+            //AddGameObj(new Zombie(new Vector2f(700, 400), _player));
             AddGameObj(new PlayerUI(_player));
             AddGameObj(map);
+            map.GenerateMap();
         }
 
         public override void OnUpdate()
@@ -105,7 +101,25 @@ namespace ZombiesGame
                     z.Health -= b.Dammage;
                 }
 
-                if(col.Obj1.GetType() == typeof(Bullet) || col.Obj2.GetType() == typeof(Bullet))
+                if ((col.Obj1.GetType() == typeof(Player) && col.Obj2.GetType() == typeof(Door)) ||
+                    (col.Obj1.GetType() == typeof(Door) && col.Obj2.GetType() == typeof(Player)))
+                {
+                    Door d = col.Obj1.GetType() == typeof(Door) ? col.Obj1 as Door : col.Obj2 as Door;
+                    d.Open();
+                }
+
+                if ((col.Obj1.GetType() == typeof(Player) && col.Obj2.GetType().IsSubclassOf(typeof(Buyable))) ||
+                    (col.Obj1.GetType().IsSubclassOf(typeof(Buyable)) && col.Obj2.GetType() == typeof(Player)))
+                {
+                    Buyable d = col.Obj1.GetType().IsSubclassOf(typeof(Buyable)) ? col.Obj1 as Buyable : col.Obj2 as Buyable;
+
+                    if (Inputs.IsClicked(Keyboard.Key.E))
+                    {
+                        d.Buy(_player);
+                    }
+                }
+
+                if (col.Obj1.GetType() == typeof(Bullet) || col.Obj2.GetType() == typeof(Bullet))
                 {
                     Bullet b = col.Obj1.GetType() == typeof(Bullet) ? col.Obj1 as Bullet : col.Obj2 as Bullet;
                     b.Destroy();
@@ -121,18 +135,6 @@ namespace ZombiesGame
             }
 
             Game.SetView(new View(_player.Position, new Vector2f(VideoMode.DesktopMode.Width, VideoMode.DesktopMode.Height)));
-            //Vector2f camPlayerDist = _player.Position - Game.Window.GetView().Center;
-            //if (GameMath.GetVectorLength(camPlayerDist) > MAX_CAMPLAYER_DISTANCE)
-            //{
-            //    Vector2f unitCP = GameMath.NormalizeVector(camPlayerDist);
-            //    unitCP *= MAX_CAMPLAYER_DISTANCE; 
-            //    View v = new View(_player.Position - unitCP, new Vector2f(VideoMode.DesktopMode.Width, VideoMode.DesktopMode.Height));
-            //    Game.SetView(new View(_player.Position, new Vector2f(VideoMode.DesktopMode.Width, VideoMode.DesktopMode.Height)));
-            //}
-            //else
-            //{
-
-            //}
         }
     }
 }

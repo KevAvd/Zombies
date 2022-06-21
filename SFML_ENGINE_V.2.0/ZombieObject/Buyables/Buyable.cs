@@ -8,16 +8,18 @@ namespace ZombiesGame
     abstract class Buyable : GameObject
     {
         //Properties
-        int _price;                     //Price of the buyable
+        protected int _price;           //Price of the buyable
         protected Player _player;       //Player who triggered the buyable
-
-        protected void Buy(Player p)
+        protected int _maxNbrOfBuy;
+        protected int _nbrOfBuy;
+        public void Buy(Player p)
         {
             _player = p;
 
-            if(_player.Money >= _price)
+            if(_player.Money >= _price && _nbrOfBuy < _maxNbrOfBuy)
             {
                 _player.Money -= _price;
+                _nbrOfBuy++;
                 Buyed();
                 return;
             }
@@ -28,5 +30,10 @@ namespace ZombiesGame
         protected abstract void Buyed();
 
         protected abstract void CantAfford();
+
+        public void Reset()
+        {
+            _nbrOfBuy = 0;
+        }
     }
 }

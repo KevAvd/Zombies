@@ -132,9 +132,10 @@ namespace SFML_Engine
         /// <param name="toScale"> Vector to scale </param>
         /// <param name="scalar"> Scalar </param>
         /// <returns> Scaled vector </returns>
-        public static Vector2f ScaleVector(Vector2f toScale, Vector2f scalar)
+        public static Vector2f ScaleVector(Vector2f toScale, Vector2f scalar, bool divide = false)
         {
-            return new Vector2f(toScale.X * scalar.X, toScale.Y * scalar.Y);
+            if (divide) { return new Vector2f(toScale.X / scalar.X, toScale.Y / scalar.Y); }
+            else { return new Vector2f(toScale.X * scalar.X, toScale.Y * scalar.Y); }
         }
 
         public static Vector2f VectorRotation(Vector2f vec, float angle)

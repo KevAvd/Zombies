@@ -14,18 +14,18 @@ namespace ZombiesGame
         PlayerState _nextState;                   //Next state of the player
         bool _isSwitching = false;                //Indicate if player is switching state
         Weapon _weapon;                           //Player's weapon
+        float normal_speed = 800;
+        float slow_speed = 400;
 
         //Inventory
         int _pistolBullet = 100;
         int _RifleBullet = 100;
         int _Shell = 100;
-        int _money = 0;
+        int _money = 10000;
         bool _speedBonus = false;
         bool _lifeBonus = false;
 
         //Constant
-        const float NORMAL_SPEED = 800;
-        const float SLOW_SPEED = 400;
         const float HITTED_DURATION = 2;
 
         //Time accumulators
@@ -38,7 +38,9 @@ namespace ZombiesGame
         public PlayerState State { get => _state; }
         public Weapon Weapon { get => _weapon; set => _weapon = value; }
         public bool IsSwitching { get => _isSwitching; }
-        internal PlayerState NextState { get => _nextState; }
+        public PlayerState NextState { get => _nextState; }
+        public float NormalSpeed { get => normal_speed; set => normal_speed = value; }
+        public float SlowSpeed { get => slow_speed; set => slow_speed = value; }
 
         //enum
         public enum PlayerState
@@ -135,7 +137,7 @@ namespace ZombiesGame
         void SET_NORMAL_STATE()
         {
             _graphicHandler.GraphicState = GraphicState.LAYER_3;
-            _speed = NORMAL_SPEED;
+            _speed = normal_speed;
         }
 
         /// <summary>
@@ -157,7 +159,7 @@ namespace ZombiesGame
         /// </summary>
         void SET_RELOADING_STATE()
         {
-            _speed = SLOW_SPEED;
+            _speed = slow_speed;
             _graphicHandler.GraphicState = GraphicState.LAYER_3;
             if (_weapon.GetType() == typeof(Pistol))
             {
@@ -187,7 +189,7 @@ namespace ZombiesGame
         /// </summary>
         void SET_HITTED_STATE()
         {
-            _speed = NORMAL_SPEED;
+            _speed = normal_speed;
             _hittedAcc = 0;
         }
 
@@ -250,9 +252,15 @@ namespace ZombiesGame
         /// Switch weapon
         /// </summary>
         /// <param name="toSwitch"> Weapon to switch to </param>
-        void SwitchWeapon(Weapon toSwitch)
+        public void SwitchWeapon(Weapon toSwitch)
         {
+            if(_weapon != null)
+            {
+                _weapon.Destroy();
+            }
+
             _weapon = toSwitch;
+            GameState.AddGameObj(_weapon);
 
             if (_weapon.GetType() == typeof(Pistol))
             {

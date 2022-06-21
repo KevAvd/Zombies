@@ -7,16 +7,16 @@ using SFML_Engine;
 
 namespace ZombiesGame
 {
-    class LifeBonus : Buyable
+    class PistolBuy : Buyable
     {
-        public LifeBonus(Vector2f pos)
+        public PistolBuy(Vector2f pos)
         {
             //Set price
-            _price = 2500;
-            _maxNbrOfBuy = 1;
+            _price = 1000;
+            _maxNbrOfBuy = 10;
 
             //Set graphic handler
-            _graphicHandler.AddGraphicObject("Base", new GameSprite(16, 80, 16, 16));
+            _graphicHandler.AddGraphicObject("Base", new GameSprite(32, 80, 16, 16));
             _graphicHandler.SetDefaultSprite("Base");
 
             //Set physic object
@@ -31,9 +31,7 @@ namespace ZombiesGame
 
         protected override void Buyed()
         {
-            _player.MaxHealth = 5;
-            _player.Health = 5;
-            //Destroy();
+            _player.SwitchWeapon(new Pistol());
         }
 
         protected override void CantAfford()

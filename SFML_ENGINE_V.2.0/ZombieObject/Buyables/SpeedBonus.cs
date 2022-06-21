@@ -7,16 +7,16 @@ using SFML_Engine;
 
 namespace ZombiesGame
 {
-    class LifeBonus : Buyable
+    class SpeedBonus : Buyable
     {
-        public LifeBonus(Vector2f pos)
+        public SpeedBonus(Vector2f pos)
         {
             //Set price
             _price = 2500;
             _maxNbrOfBuy = 1;
 
             //Set graphic handler
-            _graphicHandler.AddGraphicObject("Base", new GameSprite(16, 80, 16, 16));
+            _graphicHandler.AddGraphicObject("Base", new GameSprite(0, 80, 16, 16));
             _graphicHandler.SetDefaultSprite("Base");
 
             //Set physic object
@@ -31,9 +31,9 @@ namespace ZombiesGame
 
         protected override void Buyed()
         {
-            _player.MaxHealth = 5;
-            _player.Health = 5;
-            //Destroy();
+            _player.NormalSpeed = 1200;
+            _player.SlowSpeed = 800;
+            _player.SwitchState(Player.PlayerState.NORMAL);
         }
 
         protected override void CantAfford()
